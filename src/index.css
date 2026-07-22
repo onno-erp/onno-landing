@@ -4,8 +4,8 @@
 
 :root {
   font-family: 'Nimbus Sans TW01', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #111827;
-  background-color: #9bbfd8;
+  color: #f8fafc;
+  background-color: #06152f;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -28,7 +28,7 @@ body {
 }
 
 .overscroll-top-edge {
-  box-shadow: 0 -100vh 0 100vh #9bbfd8;
+  box-shadow: 0 -100vh 0 100vh #06152f;
 }
 
 .overscroll-bottom-edge {
@@ -128,7 +128,7 @@ button:disabled,
 }
 
 .mobile-menu-overlay.is-open {
-  background: rgb(17 24 39 / 10%);
+  background: rgb(2 8 23 / 58%);
   opacity: 1;
   pointer-events: auto;
   visibility: visible;

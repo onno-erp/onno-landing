@@ -25,25 +25,25 @@ const MODEL_URL = '/models/onno-hero.glb'
 
 function createPresetMaterial() {
   return new MeshPhysicalMaterial({
-    color: new Color('#ffffff'),
-    roughness: 0,
+    color: new Color('#b8ccda'),
+    roughness: 0.08,
     // Full metalness cancels transmission in Three.js' physical shader.
     // Keep a trace of metallic reflection while preserving the glass preset.
-    metalness: 0.05,
-    transmission: 0.98,
-    ior: 2.01,
-    thickness: 0.3,
-    attenuationColor: new Color('#00e0d5'),
-    attenuationDistance: 1.3,
-    dispersion: 5,
-    iridescence: 1,
-    iridescenceIOR: 2.19,
-    iridescenceThicknessRange: [236, 249],
-    clearcoat: 0.57,
-    clearcoatRoughness: 0,
-    envMapIntensity: 1.3,
-    emissive: new Color('#00e0d5'),
-    emissiveIntensity: 0,
+    metalness: 0.08,
+    transmission: 0.86,
+    ior: 1.72,
+    thickness: 0.58,
+    attenuationColor: new Color('#1b6f78'),
+    attenuationDistance: 0.72,
+    dispersion: 2.8,
+    iridescence: 0.62,
+    iridescenceIOR: 1.82,
+    iridescenceThicknessRange: [180, 260],
+    clearcoat: 0.72,
+    clearcoatRoughness: 0.06,
+    envMapIntensity: 0.68,
+    emissive: new Color('#123d49'),
+    emissiveIntensity: 0.12,
     side: DoubleSide,
   })
 }
@@ -76,24 +76,32 @@ export function ModelShowcase({ className = '' }: { className?: string }) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.outputColorSpace = SRGBColorSpace
     renderer.toneMapping = ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.05
+    renderer.toneMappingExposure = 0.82
     renderer.domElement.className = 'h-full w-full'
     mount.appendChild(renderer.domElement)
 
     const pmrem = new PMREMGenerator(renderer)
-    const environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+    const environment = pmrem.fromScene(new RoomEnvironment(), 0.12).texture
     scene.environment = environment
-    scene.environmentIntensity = 1.2
+    scene.environmentIntensity = 0.52
     scene.environmentRotation.set(
       MathUtils.degToRad(16),
       MathUtils.degToRad(12),
       MathUtils.degToRad(40),
     )
 
-    scene.add(new AmbientLight(0xffffff, 2.1))
-    const keyLight = new DirectionalLight(0xffffff, 5)
-    keyLight.position.set(1.291, 5.334, 5)
+    scene.add(new AmbientLight(0x314764, 0.9))
+    const keyLight = new DirectionalLight(0xa8c6ff, 3.1)
+    keyLight.position.set(1.4, 5.2, 4.5)
     scene.add(keyLight)
+
+    const rimLight = new DirectionalLight(0x62d4ca, 1.45)
+    rimLight.position.set(-4, 1.5, -2.5)
+    scene.add(rimLight)
+
+    const fillLight = new DirectionalLight(0x263a58, 0.8)
+    fillLight.position.set(3, -2, -3)
+    scene.add(fillLight)
 
     const stage = new Group()
     stage.position.y = 0.1
@@ -279,16 +287,16 @@ export function ModelShowcase({ className = '' }: { className?: string }) {
         role="img"
         aria-label="Interactive rotating onno 3D character. Drag or use arrow keys to spin."
         tabIndex={0}
-        className="absolute inset-0 touch-none cursor-grab outline-none active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900/40"
+        className="absolute inset-0 touch-none cursor-grab outline-none active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/50"
       />
 
       {status === 'loading' && (
-        <div className="absolute inset-0 hidden items-center justify-center text-xs uppercase tracking-[0.2em] text-gray-700/60 lg:flex">
+        <div className="absolute inset-0 hidden items-center justify-center text-xs uppercase tracking-[0.2em] text-white/50 lg:flex">
           Loading model
         </div>
       )}
       {status === 'error' && (
-        <div className="absolute inset-0 hidden items-center justify-center px-8 text-center text-sm text-gray-700/70 lg:flex">
+        <div className="absolute inset-0 hidden items-center justify-center px-8 text-center text-sm text-white/60 lg:flex">
           3D preview unavailable
         </div>
       )}

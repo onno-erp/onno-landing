@@ -24,24 +24,24 @@ export function LandingSections() {
   const telegramLink = getTelegramLink(language)
 
   return (
-    <div className="bg-[#f3f2ee] text-gray-900">
+    <div className="bg-[#141412] text-white">
       <section id="framework" className="px-5 pb-24 pt-28 sm:px-8 sm:pb-32 sm:pt-36 lg:px-10">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <h2 className="text-4xl font-normal leading-tight tracking-tight sm:text-5xl lg:text-6xl">{copy.foundation.title}</h2>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg">{copy.foundation.description}</p>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">{copy.foundation.description}</p>
           </div>
 
-          <div className="mt-12 grid gap-px overflow-hidden rounded-3xl bg-gray-900/10 ring-1 ring-gray-900/10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-px overflow-hidden rounded-3xl bg-white/10 ring-1 ring-white/10 sm:grid-cols-2 lg:grid-cols-3">
             {copy.foundation.cards.map((card, index) => {
               const Icon = foundationIcons[index]
               return (
-                <article key={card.title} className="group min-h-64 bg-[#faf9f6] p-7 transition-colors hover:bg-white sm:p-8">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 text-white transition-transform group-hover:-rotate-3 group-hover:scale-105">
+                <article key={card.title} className="group min-h-64 bg-[#1c1c19] p-7 transition-colors hover:bg-[#22221f] sm:p-8">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#64d8ce]/10 text-[#64d8ce] ring-1 ring-[#64d8ce]/20 transition-transform group-hover:-rotate-3 group-hover:scale-105">
                     <Icon className="h-4.5 w-4.5" />
                   </div>
                   <h3 className="mt-12 text-xl font-medium tracking-tight">{card.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-600">{card.description}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-white/50">{card.description}</p>
                 </article>
               )
             })}
@@ -76,39 +76,39 @@ export function LandingSections() {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-20">
           <div>
             <h2 className="text-4xl font-normal leading-tight tracking-tight sm:text-5xl lg:text-6xl">{copy.caseStudy.title}</h2>
-            <p className="mt-5 text-base leading-relaxed text-gray-600 sm:text-lg">{copy.caseStudy.description}</p>
+            <p className="mt-5 text-base leading-relaxed text-white/55 sm:text-lg">{copy.caseStudy.description}</p>
 
-            <div className="mt-9 rounded-2xl bg-white/65 p-6 ring-1 ring-gray-900/10">
+            <div className="mt-9 rounded-2xl bg-white/[0.045] p-6 ring-1 ring-white/10">
               <h3 className="text-sm font-medium">{copy.caseStudy.problemTitle}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">{copy.caseStudy.problem}</p>
+              <p className="mt-2 text-sm leading-relaxed text-white/50">{copy.caseStudy.problem}</p>
             </div>
-            <p className="mt-5 text-xs leading-relaxed text-gray-500">{copy.caseStudy.note}</p>
+            <p className="mt-5 text-xs leading-relaxed text-white/35">{copy.caseStudy.note}</p>
             <a
               href={`/${language}/case-studies/photori`}
-              className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-gray-900 transition-colors hover:text-[#238e85]"
+              className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-white transition-colors hover:text-[#64d8ce]"
             >
               {copy.caseStudy.cta} <ArrowRight className="h-4 w-4" />
             </a>
           </div>
 
-          <div className="relative rounded-[2rem] bg-[#dcece9] p-6 ring-1 ring-gray-900/10 sm:p-9">
+          <div className="relative rounded-[2rem] bg-[#182825] p-6 ring-1 ring-[#64d8ce]/20 sm:p-9">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-2xl font-medium tracking-tight">Photori</div>
-                <div className="mt-1 text-xs text-gray-600">{copy.caseStudy.workflowTitle}</div>
+                <div className="mt-1 text-xs text-white/50">{copy.caseStudy.workflowTitle}</div>
               </div>
               <div className="flex gap-2">
-                <span className="rounded-full bg-white/65 px-3 py-1.5 text-[10px] text-gray-600">Ozon</span>
-                <span className="rounded-full bg-white/65 px-3 py-1.5 text-[10px] text-gray-600">Wildberries</span>
+                <span className="rounded-full bg-white/10 px-3 py-1.5 text-[10px] text-white/60">Ozon</span>
+                <span className="rounded-full bg-white/10 px-3 py-1.5 text-[10px] text-white/60">Wildberries</span>
               </div>
             </div>
 
             <div className="mt-10 space-y-3">
               {copy.caseStudy.workflow.map((item, index) => (
-                <div key={item} className="flex items-center gap-4 rounded-2xl bg-white/70 p-4 ring-1 ring-white">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-900 text-xs text-white">{index + 1}</div>
+                <div key={item} className="flex items-center gap-4 rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-xs text-[#171719]">{index + 1}</div>
                   <span className="text-sm font-medium">{item}</span>
-                  {index < copy.caseStudy.workflow.length - 1 ? <ArrowRight className="ml-auto h-4 w-4 text-gray-400" /> : <PackageCheck className="ml-auto h-4 w-4 text-[#238e85]" />}
+                  {index < copy.caseStudy.workflow.length - 1 ? <ArrowRight className="ml-auto h-4 w-4 text-white/30" /> : <PackageCheck className="ml-auto h-4 w-4 text-[#64d8ce]" />}
                 </div>
               ))}
             </div>
@@ -117,7 +117,7 @@ export function LandingSections() {
       </section>
 
       <section id="contact" className="px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10">
-        <div className="relative mx-auto overflow-hidden rounded-[2rem] bg-[#171719] px-6 py-16 text-white sm:px-12 sm:py-20 lg:max-w-7xl lg:px-20 lg:py-24">
+        <div className="relative mx-auto overflow-hidden rounded-[2rem] bg-[#171719] px-6 py-16 text-white ring-1 ring-white/10 sm:px-12 sm:py-20 lg:max-w-7xl lg:px-20 lg:py-24">
           <div className="relative z-10 max-w-4xl">
             <h2 className="text-4xl font-normal leading-tight tracking-tight sm:text-5xl lg:text-6xl">{copy.finalCta.title}</h2>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">{copy.finalCta.description}</p>
