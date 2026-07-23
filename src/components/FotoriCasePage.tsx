@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { useLanguage } from '../i18n'
-import { getTelegramLink } from '../telegram'
+import { openTelegramLeadSheet } from '../telegram'
 import { Footer } from './Footer'
 import { Navbar } from './Navbar'
 import { AnimatedTelegramIcon } from './TelegramIcon'
@@ -109,7 +109,6 @@ const caseCopy = {
 export function FotoriCasePage() {
   const { language } = useLanguage()
   const copy = caseCopy[language]
-  const telegramLink = getTelegramLink(language)
 
   return (
     <div className="min-h-screen bg-[#f3f2ee] text-gray-900">
@@ -185,9 +184,9 @@ export function FotoriCasePage() {
           <div className="mx-auto max-w-7xl rounded-[2rem] bg-[#171719] px-6 py-16 text-white sm:px-12 sm:py-20 lg:px-20">
             <h2 className="max-w-4xl text-4xl font-normal leading-tight tracking-tight sm:text-5xl lg:text-6xl">{copy.ctaTitle}</h2>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/55">{copy.ctaBody}</p>
-            <a href={telegramLink} target="_blank" rel="noreferrer" className="telegram-cta mt-8 inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
+            <button type="button" onClick={openTelegramLeadSheet} className="telegram-cta mt-8 inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
               {copy.cta} <AnimatedTelegramIcon />
-            </a>
+            </button>
           </div>
         </section>
       </main>

@@ -1,6 +1,5 @@
 'use client'
 
-import type { ReactNode } from 'react'
 import {
   ArrowRight,
   Bot,
@@ -16,19 +15,19 @@ import {
   Workflow,
 } from 'lucide-react'
 import { useLanguage } from '../i18n'
-import { getTelegramLink } from '../telegram'
+import { openTelegramLeadSheet } from '../telegram'
 import { Footer } from './Footer'
 import { AnimatedTelegramIcon } from './TelegramIcon'
 
 const foundationIcons = [Boxes, Layers3, Database, FileCheck2, Bot, RefreshCw]
 
-export function LandingSections({ intro }: { intro?: ReactNode }) {
+export function LandingSections({ ctaOnly = false }: { ctaOnly?: boolean }) {
   const { copy, language } = useLanguage()
-  const telegramLink = getTelegramLink(language)
 
   return (
     <div className="bg-[#f3f2ee] text-gray-900">
-      {intro ?? <section className="px-5 pb-8 pt-24 sm:px-8 sm:pb-12 sm:pt-32 lg:px-10">
+      {!ctaOnly && <>
+      <section className="px-5 pb-8 pt-24 sm:px-8 sm:pb-12 sm:pt-32 lg:px-10">
         <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#171719] px-6 py-16 text-white sm:px-10 sm:py-20 lg:px-16 lg:py-24">
           <h2 className="max-w-5xl text-5xl font-normal leading-[0.98] tracking-tight sm:text-6xl lg:text-8xl">{copy.manifesto.title}</h2>
           <p className="mt-8 max-w-3xl text-base leading-relaxed text-white/55 sm:text-lg">{copy.manifesto.description}</p>
@@ -43,7 +42,7 @@ export function LandingSections({ intro }: { intro?: ReactNode }) {
             ))}
           </div>
         </div>
-      </section>}
+      </section>
 
       <section id="framework" className="px-5 pb-24 pt-28 sm:px-8 sm:pb-32 sm:pt-36 lg:px-10">
         <div className="mx-auto max-w-7xl">
@@ -145,16 +144,27 @@ export function LandingSections({ intro }: { intro?: ReactNode }) {
           </div>
         </div>
       </section>
+      </>}
 
-      <section id="contact" className="px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10">
+      <section id="contact" className={ctaOnly ? 'px-5 py-10 sm:px-8 sm:py-14 lg:px-10 lg:py-16' : 'px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10'}>
         <div className="relative mx-auto overflow-hidden rounded-[2rem] bg-[#171719] px-6 py-16 text-white sm:px-12 sm:py-20 lg:max-w-7xl lg:px-20 lg:py-24">
           <div className="relative z-10 max-w-4xl">
-            <h2 className="text-4xl font-normal leading-tight tracking-tight sm:text-5xl lg:text-6xl">{copy.finalCta.title}</h2>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">{copy.finalCta.description}</p>
+              <h2 className="text-4xl font-normal leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+                {language === 'ru' ? (
+                  <span className="inline-flex flex-wrap items-center gap-x-[0.18em]">
+                    <span>Переросли Excel</span>
+                    <span className="inline-flex items-center gap-x-[0.06em]">
+                      <img src="/google-sheets.svg" alt="Google Таблицы" className="inline-block h-[0.88em] w-auto translate-y-[0.04em]" />
+                      <span>?</span>
+                    </span>
+                  </span>
+                ) : copy.finalCta.title}
+              </h2>
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">{copy.finalCta.description}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href={telegramLink} target="_blank" rel="noreferrer" className="telegram-cta inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
+              <button type="button" onClick={openTelegramLeadSheet} className="telegram-cta inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
                 {copy.finalCta.primary} <AnimatedTelegramIcon />
-              </a>
+              </button>
               <a href="https://github.com/onno-erp/onno-framework" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-white ring-1 ring-white/20 transition-colors hover:bg-white/10">
                 {copy.finalCta.secondary} <Github className="h-4 w-4" />
               </a>

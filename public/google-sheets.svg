@@ -1,0 +1,13 @@
+<svg width="800" height="582" fill="none" viewBox="0 0 800 582" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#009954" d="M0 193.64c0-40.65 0-60.98 6.38-77.1a90.91 90.91 0 0 1 51.06-51.06c16.12-6.39 36.45-6.39 77.1-6.39h276.37c40.65 0 60.98 0 77.1 6.38a90.91 90.91 0 0 1 51.06 51.07c6.38 16.12 6.38 36.45 6.38 77.1v194.54c0 40.65 0 60.98-6.38 77.1a90.91 90.91 0 0 1-51.06 51.07c-16.12 6.38-36.45 6.38-77.1 6.38H134.55c-40.65 0-60.98 0-77.11-6.38a90.91 90.91 0 0 1-51.06-51.07C0 449.16 0 428.83 0 388.18Z"/>
+  <mask id="a" width="160" height="128" x="24" y="32" maskUnits="userSpaceOnUse"><rect width="160" height="128" x="24" y="32" fill="#fff" rx="20"/></mask>
+  <g mask="url(#a)" transform="matrix(4.54545 0 0 4.54545 -36.36 -145.45)">
+    <path fill="#0ebc5f" d="M24 32h160v128H24Z"/>
+    <g filter="url(#b)"><rect width="144" height="102" fill="url(#c)" rx="25.6" transform="matrix(1 0 0 -1 8 147)"/></g>
+  </g>
+  <path stroke="#fff" stroke-linecap="round" stroke-width="54.55" d="M327.27 404.55h381.82m-90.91 86.36V200"/>
+  <defs>
+    <linearGradient id="c" x1="122.24" x2="20.76" y1="43.31" y2="43.31" gradientUnits="userSpaceOnUse"><stop stop-color="#0ebc5f"/><stop offset=".95" stop-color="#78c9ff"/></linearGradient>
+    <filter id="b" width="168" height="126" x="-4" y="33" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0"/><feBlend in="SourceGraphic"/><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+</svg>

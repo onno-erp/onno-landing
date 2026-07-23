@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowUpRight, Check } from 'lucide-react'
 import { useLanguage } from '../i18n'
+import { russianOperator } from '../legal'
 import { Footer } from './Footer'
 import { Navbar } from './Navbar'
 
@@ -15,7 +16,7 @@ const pageCopy = {
       title: 'Privacy policy',
       intro: 'A plain-language summary of how this website handles information.',
       sections: [
-        ['What we store', 'The site stores your selected language in your browser. We do not currently operate account registration, analytics profiles or contact forms on this website.'],
+        ['What we store', 'The site stores your selected language in your browser. The contact form composes a message locally and does not send or store its contents on this website. If you continue to Telegram, Telegram processes the draft under its own privacy policy.'],
         ['Technical data', 'Our hosting provider may process standard request data such as IP address, browser type and request time to deliver and secure the website.'],
         ['External links', 'Links to GitHub and other websites are governed by those services’ own privacy policies.'],
         ['Questions', 'For privacy questions, open an issue in the onno Framework GitHub repository.'],
@@ -63,7 +64,7 @@ const pageCopy = {
       title: 'Política de privacidad',
       intro: 'Un resumen claro de cómo este sitio web trata la información.',
       sections: [
-        ['Qué almacenamos', 'El sitio guarda en tu navegador el idioma seleccionado. Actualmente no utilizamos registro de cuentas, perfiles analíticos ni formularios de contacto en este sitio web.'],
+        ['Qué almacenamos', 'El sitio guarda en tu navegador el idioma seleccionado. El formulario de contacto redacta el mensaje localmente; este sitio no envía ni almacena su contenido. Si continúas a Telegram, Telegram procesa el borrador conforme a su propia política de privacidad.'],
         ['Datos técnicos', 'Nuestro proveedor de alojamiento puede procesar datos estándar de la solicitud, como la dirección IP, el tipo de navegador y la hora de acceso, para entregar y proteger el sitio web.'],
         ['Enlaces externos', 'Los enlaces a GitHub y a otros sitios web se rigen por las políticas de privacidad de esos servicios.'],
         ['Preguntas', 'Para consultas sobre privacidad, abre un issue en el repositorio de onno Framework en GitHub.'],
@@ -108,13 +109,16 @@ const pageCopy = {
     back: 'Вернуться к onno',
     privacy: {
       label: 'Документы',
-      title: 'Политика конфиденциальности',
-      intro: 'Кратко и понятно о том, как этот сайт работает с информацией.',
+      title: 'Политика обработки персональных данных',
+      intro: 'Политика описывает, как onno.su обрабатывает данные посетителей. Действует с 23 июля 2026 года.',
       sections: [
-        ['Что мы сохраняем', 'Сайт сохраняет выбранный язык в вашем браузере. Сейчас на сайте нет регистрации аккаунтов, аналитических профилей или контактных форм.'],
-        ['Технические данные', 'Хостинг-провайдер может обрабатывать стандартные данные запроса — IP-адрес, тип браузера и время обращения — для доставки и защиты сайта.'],
-        ['Внешние ссылки', 'Для GitHub и других внешних сайтов действуют собственные политики конфиденциальности.'],
-        ['Вопросы', 'По вопросам конфиденциальности создайте issue в GitHub-репозитории onno Framework.'],
+        ['Оператор', `${russianOperator.name}, ИНН ${russianOperator.inn}, ОГРНИП ${russianOperator.ogrnip}. Зарегистрирован ${russianOperator.registeredAt}; регистрирующий орган — ${russianOperator.registrationAuthority}. Место нахождения: ${russianOperator.location}. Электронная почта: ${russianOperator.email}.`],
+        ['Какие данные обрабатываются', 'При обычном посещении сайта могут обрабатываться IP-адрес, дата и время запроса, адрес запрошенной страницы, тип браузера и устройства, технические идентификаторы и данные об ошибках. Выбранный язык хранится локально в браузере. Контактная форма составляет сообщение локально: сайт не отправляет и не хранит введённые данные. При переходе в Telegram черновик обрабатывается Telegram по правилам этого сервиса.'],
+        ['Цели и основания', 'Технические данные используются для отображения и защиты сайта, диагностики ошибок и предотвращения злоупотреблений. Обработка осуществляется в объёме, необходимом для работы сайта, его безопасности и исполнения обязанностей оператора по закону.'],
+        ['Встроенное демо', 'На широких экранах сайт загружает демонстрацию с demo.cloud.onno.su. При этом серверу демонстрации передаются технические данные запроса; демо также может хранить свои технические настройки в браузере.'],
+        ['Передача, хранение и защита', 'Данные могут обрабатываться поставщиками хостинга и технической инфраструктуры по поручению оператора. Они хранятся не дольше, чем это необходимо для указанных целей или требуется законом, после чего удаляются или обезличиваются. Оператор принимает необходимые правовые, организационные и технические меры для защиты данных.'],
+        ['Внешние ресурсы', 'Переход по ссылкам в Telegram, GitHub и на другие сайты означает, что данные будут обрабатываться этими сервисами по их собственным правилам. Оператор не контролирует эти ресурсы.'],
+        ['Права и обращения', `Вы можете запросить сведения об обработке ваших данных, потребовать их уточнения, блокирования или удаления, а также обжаловать действия оператора в Роскомнадзоре или суде. Обращения: ${russianOperator.email}.`],
       ],
     },
     compareIntro: 'Оба варианта могут быть правильными. Главное различие — что будет центром системы: готовая платформа или явная доменная модель на Java.',
@@ -173,8 +177,8 @@ export function InfoPage({ slug }: { slug: PageSlug }) {
               <h1 className="mt-16 text-5xl font-normal tracking-tight sm:text-6xl lg:text-7xl">{copy.privacy.title}</h1>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-600">{copy.privacy.intro}</p>
               <div className="mt-16 divide-y divide-gray-900/10 border-y border-gray-900/10">
-                {copy.privacy.sections.map(([title, body]) => (
-                  <section key={title} className="grid gap-4 py-8 sm:grid-cols-[1fr_2fr] sm:gap-12">
+                {copy.privacy.sections.map(([title, body], index) => (
+                  <section id={language === 'ru' && index === 0 ? 'operator' : undefined} key={title} className="grid scroll-mt-8 gap-4 py-8 sm:grid-cols-[1fr_2fr] sm:gap-12">
                     <h2 className="text-lg font-medium">{title}</h2>
                     <p className="leading-relaxed text-gray-600">{body}</p>
                   </section>

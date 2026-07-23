@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (min-width: 640px) {
+  .telegram-lead-dialog[data-vaul-drawer] {
+    inset: 50% auto auto 50%;
+    width: min(42rem, calc(100vw - 3rem));
+    max-height: min(52rem, calc(100dvh - 3rem));
+    border-radius: 2rem;
+    transform: translate(-50%, -50%) !important;
+  }
+}
+
 :root {
   font-family: 'Nimbus Sans TW01', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #111827;
@@ -64,7 +74,7 @@ input {
 a[href],
 button:not(:disabled),
 [role='button']:not([aria-disabled='true']) {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 button:disabled,
@@ -100,6 +110,65 @@ button:disabled,
   100% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
 }
 
+@keyframes integration-marquee {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes module-picker-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes module-picker-window-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.module-picker-backdrop {
+  animation: module-picker-backdrop-in 180ms ease-out both;
+}
+
+.module-picker-window {
+  animation: module-picker-window-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.integration-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
+}
+
+.integration-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: integration-marquee 42s linear infinite;
+  will-change: transform;
+}
+
+.integration-marquee:hover .integration-marquee-track {
+  animation-play-state: paused;
+}
+
+.integration-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, transparent, black 28%, black 78%, transparent);
+}
+
+.integration-logo {
+  display: block;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0) invert(1);
+  opacity: 0.42;
+  transition: opacity 180ms ease;
+}
+
+.integration-marquee article:hover .integration-logo {
+  opacity: 0.62;
+}
+
 .telegram-cta:hover .telegram-icon-out,
 .telegram-cta:focus-visible .telegram-icon-out {
   animation: telegram-flight-out 170ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -128,11 +197,11 @@ button:disabled,
 }
 
 .mobile-menu-overlay.is-open {
-  background: rgb(17 24 39 / 10%);
+  background: transparent;
   opacity: 1;
   pointer-events: auto;
   visibility: visible;
-  backdrop-filter: blur(5px);
+  backdrop-filter: none;
   transition-delay: 0s;
 }
 
@@ -259,7 +328,11 @@ button:disabled,
 
   .mobile-menu-overlay,
   .mobile-menu-panel,
+  .module-picker-backdrop,
+  .module-picker-window,
+  .integration-marquee-track,
   .mobile-menu-item {
+    animation: none;
     transition: none;
   }
 
@@ -268,5 +341,10 @@ button:disabled,
   .telegram-cta:hover .telegram-icon-in,
   .telegram-cta:focus-visible .telegram-icon-in {
     animation: none;
+  }
+
+  .integration-marquee-track {
+    animation: none;
+    transform: none;
   }
 }

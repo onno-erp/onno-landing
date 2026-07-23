@@ -4,6 +4,7 @@ import { ArrowUpRight, Github } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import type { MouseEvent } from 'react'
 import { useLanguage, type Language } from '../i18n'
+import { russianOperator } from '../legal'
 import { OnnoWordmark } from './Logo'
 
 const footerCopy = {
@@ -46,7 +47,8 @@ const footerCopy = {
     how: 'Как это работает',
     caseStudy: 'Кейсы',
     documentation: 'Документация',
-    privacy: 'Политика конфиденциальности',
+    privacy: 'Обработка персональных данных',
+    details: 'Реквизиты',
     rights: 'Открытая основа для бизнеса, который не помещается в шаблон.',
   },
 } as const
@@ -68,11 +70,17 @@ export function Footer() {
   const groups = [
     {
       title: copy.product,
-      links: [
-        { label: copy.framework, href: `${home}#framework` },
-        { label: copy.how, href: `${home}#how-it-works` },
-        { label: copy.caseStudy, href: `${home}#cases` },
-      ],
+      links: language === 'ru'
+        ? [
+            { label: 'Что такое onno', href: `${home}#what-is-onno` },
+            { label: 'Модули', href: `${home}#modules` },
+            { label: 'Интеграции', href: `${home}#integrations` },
+          ]
+        : [
+            { label: copy.framework, href: `${home}#framework` },
+            { label: copy.how, href: `${home}#how-it-works` },
+            { label: copy.caseStudy, href: `${home}#cases` },
+          ],
     },
     {
       title: copy.compare,
@@ -91,10 +99,12 @@ export function Footer() {
     },
     {
       title: copy.legal,
-      links: [{ label: copy.privacy, href: `${home}privacy` }],
+      links: [
+        { label: copy.privacy, href: `${home}privacy` },
+        ...(language === 'ru' ? [{ label: footerCopy.ru.details, href: `${home}privacy#operator` }] : []),
+      ],
     },
   ]
-
   return (
     <footer className="overscroll-bottom-edge overflow-hidden bg-[#0d0d0f] px-5 pb-8 pt-16 text-white sm:px-8 sm:pb-10 sm:pt-20 lg:px-10 lg:pt-24">
       <div className="mx-auto max-w-7xl">
@@ -136,6 +146,15 @@ export function Footer() {
             ))}
           </div>
         </div>
+
+        {language === 'ru' ? (
+          <address className="break-words border-b border-white/10 py-5 text-xs not-italic leading-relaxed text-white/45">
+            {russianOperator.name} · ИНН {russianOperator.inn} · ОГРНИП {russianOperator.ogrnip} · {russianOperator.location} ·{' '}
+            <a className="transition-colors hover:text-white" href={`mailto:${russianOperator.email}`}>
+              {russianOperator.email}
+            </a>
+          </address>
+        ) : null}
 
         <div className="flex flex-col gap-5 py-7 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} onno</span>

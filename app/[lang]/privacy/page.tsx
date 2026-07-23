@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { InfoPage } from '../../../src/components/InfoPage'
 import { localizedAlternates } from '../../../src/seo'
 
-const titles = { en: 'Privacy policy — onno', ru: 'Политика конфиденциальности — onno', es: 'Política de privacidad — onno' } as const
+const titles = { en: 'Privacy policy — onno', ru: 'Обработка персональных данных — onno', es: 'Política de privacidad — onno' } as const
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params

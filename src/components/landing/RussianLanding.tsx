@@ -1,12 +1,15 @@
 import { Hero } from '../Hero'
 import { LandingSections } from '../LandingSections'
-import { RussianPriceComparison } from './RussianPriceComparison'
+import { RussianModernTeams } from './RussianModernTeams'
+import { RussianWhatIsOnno } from './RussianWhatIsOnno'
 
 export function RussianLanding() {
   return (
     <>
       <Hero />
-      <LandingSections intro={<RussianPriceComparison />} />
+      <RussianWhatIsOnno />
+      <RussianModernTeams />
+      <LandingSections ctaOnly />
     </>
   )
 }

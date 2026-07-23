@@ -16,10 +16,57 @@ const demoCopy = {
 
 function LoadingState({ label }: { label: string }) {
   return (
-    <div className="absolute inset-0 flex items-center justify-center bg-[#111113] text-white">
-      <div className="flex flex-col items-center gap-3">
-        <span className="h-7 w-7 animate-spin rounded-full border-2 border-white/15 border-t-white/80" />
-        <span className="text-xs text-white/50">{label}</span>
+    <div
+      className="absolute inset-0 flex bg-[#0d0d0d] text-white"
+      role="status"
+      aria-live="polite"
+      aria-label={label}
+    >
+      <aside className="hidden w-60 shrink-0 border-r border-[#242424] bg-[#121212] p-5 sm:block">
+        <div className="mb-12 flex items-center gap-3">
+          <span className="h-8 w-8 rounded-lg bg-[#5b4ff5]" />
+          <span className="h-3 w-24 rounded-full bg-[#2a2a2a]" />
+        </div>
+        <div className="space-y-7">
+          {[72, 112, 88, 104].map((width) => (
+            <div key={width} className="space-y-3">
+              <span className="block h-2 w-12 rounded-full bg-[#242424]" />
+              <span className="block h-3 rounded-full bg-[#1f1f1f]" style={{ width }} />
+              <span className="block h-3 rounded-full bg-[#1f1f1f]" style={{ width: width - 16 }} />
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      <div className="min-w-0 flex-1 p-5 sm:p-8">
+        <div className="mb-8 flex items-center justify-between">
+          <span className="h-4 w-28 rounded-full bg-[#242424]" />
+          <span className="h-9 w-24 rounded-full bg-[#1f1f1f]" />
+        </div>
+        <div className="overflow-hidden rounded-2xl border border-[#242424] bg-[#121212]">
+          <div className="flex h-16 items-center gap-4 border-b border-[#242424] px-5">
+            <span className="h-4 w-24 rounded-full bg-[#2a2a2a]" />
+            <span className="h-8 w-28 rounded-full bg-[#1f1f1f]" />
+            <span className="ml-auto h-8 w-36 rounded-full bg-[#1f1f1f]" />
+          </div>
+          <div className="divide-y divide-[#202020] px-5">
+            {[0, 1, 2, 3, 4, 5, 6].map((row) => (
+              <div key={row} className="grid h-14 grid-cols-4 items-center gap-8 opacity-[0.85]">
+                <span className="h-3 rounded-full bg-[#1f1f1f]" />
+                <span className="h-3 rounded-full bg-[#1f1f1f]" />
+                <span className="h-3 rounded-full bg-[#1f1f1f]" />
+                <span className="h-6 w-20 rounded-full bg-[#242424]" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
+        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-[#121212]/95 px-4 py-3 shadow-2xl">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white/80" aria-hidden="true" />
+          <span className="text-xs font-medium text-white/60">{label}</span>
+        </div>
       </div>
     </div>
   )
@@ -209,12 +256,12 @@ export function DashboardMockup() {
           </button>
         )}
 
-        <div className="bg-[#111113]" style={canvasStyle}>
+        <div className="bg-[#0d0d0d]" style={{ ...canvasStyle, colorScheme: 'dark' }} aria-busy={!isLoaded}>
           {!isLoaded && <LoadingState label={copy.loading} />}
           <iframe
             src={DEMO_URL}
             title={copy.live}
-            className={`block h-full w-full border-0 transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`block h-full w-full border-0 bg-[#0d0d0d] transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             loading="eager"
             allow="clipboard-read; clipboard-write"
             tabIndex={isOpen ? 0 : -1}

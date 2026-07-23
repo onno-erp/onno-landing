@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { LanguageProvider, type Language } from '../../src/i18n'
+import { TelegramLeadSheet } from '../../src/components/TelegramLeadForm'
+import { YandexMetrika } from '../../src/components/YandexMetrika'
 import { localizedAlternates } from '../../src/seo'
 import '../../src/index.css'
 
@@ -38,6 +40,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     metadataBase: new URL('https://onno.su'),
     title: page.title,
     description: page.description,
+    formatDetection: {
+      telephone: false,
+      address: false,
+      email: false,
+    },
+    verification: { yandex: 'eb01d8e0f3215f1b' },
     alternates,
     openGraph: {
       type: 'website',
@@ -65,7 +73,11 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={lang} data-scroll-behavior="smooth">
       <body>
-        <LanguageProvider initialLanguage={lang as Language}>{children}</LanguageProvider>
+        <LanguageProvider initialLanguage={lang as Language}>
+          {children}
+          <TelegramLeadSheet />
+        </LanguageProvider>
+        <YandexMetrika />
       </body>
     </html>
   )
