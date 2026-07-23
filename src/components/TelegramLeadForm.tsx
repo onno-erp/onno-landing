@@ -1,159 +1,303 @@
 'use client'
 
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { X } from 'lucide-react'
+import * as Dialog from '@radix-ui/react-dialog'
 import { Drawer } from 'vaul'
 import { useLanguage, type Language } from '../i18n'
-import { getTelegramDraftLink, getTelegramLink, TELEGRAM_LEAD_EVENT } from '../telegram'
+import { reachMetrikaGoal } from '../metrika'
+import { getTelegramDraftLink, TELEGRAM_LEAD_EVENT, type TelegramLeadSource } from '../telegram'
 import { AnimatedTelegramIcon } from './TelegramIcon'
 
 const formCopy = {
   en: {
-    eyebrow: 'A useful first message',
-    title: 'Tell me what you’re working on.',
-    avatarAlt: 'Mike de Geofroy',
-    industry: 'Industry',
-    industryPlaceholder: 'e.g. manufacturing, retail, logistics',
-    challenge: 'What process would you like to improve?',
-    challengePlaceholder: 'Orders live in spreadsheets and production status is coordinated in chat…',
+    pitchTitle: 'Let’s see whether onno fits.',
+    formTitle: 'A little about your business.',
+    allOptional: 'All fields are optional.',
+    industry: 'Business area',
+    industryPlaceholder: 'e.g. manufacturing',
+    employees: 'Company size',
+    employeesPlaceholder: 'e.g. 25 people',
     name: 'Your name',
-    optional: 'optional',
     namePlaceholder: 'What should I call you?',
-    submit: 'Compose in Telegram',
-    note: 'Telegram opens with an editable draft. Nothing is sent until you press Send.',
-    direct: 'Skip the form and write directly',
+    submit: 'Continue in Telegram',
+    note: 'Telegram opens with an editable draft.',
     close: 'Close contact form',
   },
   es: {
-    eyebrow: 'Un buen primer mensaje',
-    title: 'Cuéntame en qué estás trabajando.',
-    avatarAlt: 'Mike de Geofroy',
+    pitchTitle: 'Veamos si onno encaja.',
+    formTitle: 'Un poco sobre tu empresa.',
+    allOptional: 'Todos los campos son opcionales.',
     industry: 'Sector',
-    industryPlaceholder: 'p. ej., fabricación, comercio, logística',
-    challenge: '¿Qué proceso quieres mejorar?',
-    challengePlaceholder: 'Los pedidos están en hojas de cálculo y coordinamos la producción por chat…',
+    industryPlaceholder: 'p. ej., fabricación',
+    employees: 'Tamaño de la empresa',
+    employeesPlaceholder: 'p. ej., 25 personas',
     name: 'Tu nombre',
-    optional: 'opcional',
     namePlaceholder: '¿Cómo debería llamarte?',
-    submit: 'Redactar en Telegram',
-    note: 'Telegram se abrirá con un borrador editable. No se enviará nada hasta que pulses Enviar.',
-    direct: 'Omitir el formulario y escribir directamente',
+    submit: 'Continuar en Telegram',
+    note: 'Telegram se abrirá con un borrador editable.',
     close: 'Cerrar formulario de contacto',
   },
   ru: {
-    eyebrow: 'Хорошее первое сообщение',
-    title: 'Расскажите мне о своей задаче.',
-    avatarAlt: 'Майк де Жофруа',
+    pitchTitle: 'Поймём, подойдёт ли вам onno.',
+    formTitle: 'Пара слов о вашем бизнесе.',
+    allOptional: 'Все поля необязательны.',
     industry: 'Сфера бизнеса',
-    industryPlaceholder: 'например, производство, торговля, логистика',
-    challenge: 'Какой процесс вы хотите улучшить?',
-    challengePlaceholder: 'Заказы ведём в таблицах, а статусы производства согласовываем в чате…',
+    industryPlaceholder: 'Например, производство',
+    employees: 'Размер компании',
+    employeesPlaceholder: 'Например, 25 человек',
     name: 'Ваше имя',
-    optional: 'необязательно',
     namePlaceholder: 'Как мне к вам обращаться?',
-    submit: 'Составить сообщение в Telegram',
-    note: 'Telegram откроется с готовым черновиком. Сообщение отправится, только когда вы нажмёте «Отправить».',
-    direct: 'Пропустить форму и написать сразу',
+    submit: 'Продолжить в Telegram',
+    note: 'Telegram откроется с готовым черновиком.',
     close: 'Закрыть форму',
   },
 } as const
 
-function composeMessage(language: Language, industry: string, challenge: string, name: string) {
-  const signature = name ? `\n\n— ${name}` : ''
+function pickMessage(variants: readonly [string, string]) {
+  return variants[Math.floor(Math.random() * variants.length)]
+}
+
+function composeMessage(language: Language, industry: string, employees: string, name: string) {
+  const combination = `${name ? '1' : '0'}${industry ? '1' : '0'}${employees ? '1' : '0'}`
 
   if (language === 'ru') {
-    return `Привет, Майк! У меня бизнес в сфере «${industry}», и я хочу понять, подойдёт ли onno для наших процессов.\n\nПроцесс, который мы хотим улучшить:\n${challenge}\n\nЧто вы могли бы нам предложить?${signature}`
+    const variants: Record<string, readonly [string, string]> = {
+      '000': [
+        'Привет! Хочу познакомиться с onno и понять, подойдёт ли он для нашего бизнеса. С чего лучше начать?',
+        'Привет! Интересуемся onno и хотим понять, какие задачи можно решить с его помощью.',
+      ],
+      '100': [
+        `Привет! Меня зовут ${name}. Хочу узнать больше об onno и понять, подойдёт ли он нашей компании.`,
+        `Привет! Я ${name}. С чего лучше начать знакомство с onno?`,
+      ],
+      '010': [
+        `Привет! Мы работаем в сфере «${industry}» и хотим понять, какие процессы можно перенести в onno.`,
+        `Привет! У нас бизнес в сфере «${industry}». Хотим понять, подойдёт ли нам onno.`,
+      ],
+      '001': [
+        `Привет! Размер нашей команды — ${employees}. Хотим понять, подойдёт ли onno компании нашего масштаба.`,
+        `Привет! В нашей компании ${employees}. Как onno может помочь такой команде?`,
+      ],
+      '110': [
+        `Привет! Меня зовут ${name}, мы работаем в сфере «${industry}». Хочу понять, подойдёт ли onno для наших процессов.`,
+        `Привет! Я ${name}. У нас бизнес в сфере «${industry}», и мы хотим понять, как onno может быть нам полезен.`,
+      ],
+      '101': [
+        `Привет! Меня зовут ${name}. Размер нашей команды — ${employees}, и я хочу понять, подойдёт ли нам onno.`,
+        `Привет! Я ${name}, в нашей компании ${employees}. С чего начать работу с onno?`,
+      ],
+      '011': [
+        `Привет! Мы работаем в сфере «${industry}», размер команды — ${employees}. Хотим понять, как onno может помочь нашим процессам.`,
+        `Привет! У нас компания в сфере «${industry}» и команда из ${employees}. Хотим понять, подойдёт ли нам onno.`,
+      ],
+      '111': [
+        `Привет! Меня зовут ${name}. Мы работаем в сфере «${industry}», размер команды — ${employees}. Хочу понять, как onno может помочь нашему бизнесу.`,
+        `Привет! Я ${name}. У нас компания в сфере «${industry}» и команда из ${employees}. Хотим понять, подойдёт ли onno для наших процессов.`,
+      ],
+    }
+    return pickMessage(variants[combination])
   }
 
   if (language === 'es') {
-    return `¡Hola, Mike! Tengo una empresa en el sector de ${industry} y me gustaría saber si onno puede encajar en nuestra operación.\n\nEl proceso que queremos mejorar:\n${challenge}\n\n¿Qué podrías ofrecernos?${signature}`
+    const variants: Record<string, readonly [string, string]> = {
+      '000': [
+        '¡Hola! Me gustaría conocer mejor onno y saber si puede encajar en nuestra empresa. ¿Por dónde nos recomiendas empezar?',
+        '¡Hola! Nos interesa onno y queremos saber qué procesos podríamos mejorar con él.',
+      ],
+      '100': [
+        `¡Hola! Me llamo ${name}. Me gustaría conocer mejor onno y saber si puede encajar en nuestra empresa.`,
+        `¡Hola! Soy ${name}. ¿Por dónde me recomiendas empezar con onno?`,
+      ],
+      '010': [
+        `¡Hola! Trabajamos en el sector de ${industry} y queremos saber qué procesos podríamos gestionar con onno.`,
+        `¡Hola! Nuestra empresa trabaja en ${industry}. Queremos saber si onno encaja con nosotros.`,
+      ],
+      '001': [
+        `¡Hola! Nuestro equipo tiene un tamaño de ${employees}. Queremos saber si onno encaja con una empresa como la nuestra.`,
+        `¡Hola! Somos un equipo de ${employees}. Queremos saber cómo onno podría ayudarnos.`,
+      ],
+      '110': [
+        `¡Hola! Me llamo ${name} y trabajamos en el sector de ${industry}. Me gustaría saber si onno encaja con nuestros procesos.`,
+        `¡Hola! Soy ${name}. Trabajamos en ${industry} y queremos saber cómo podría ayudarnos onno.`,
+      ],
+      '101': [
+        `¡Hola! Me llamo ${name}. Nuestro equipo tiene un tamaño de ${employees} y queremos saber si onno encaja con nosotros.`,
+        `¡Hola! Soy ${name} y somos un equipo de ${employees}. ¿Por dónde empezamos con onno?`,
+      ],
+      '011': [
+        `¡Hola! Trabajamos en el sector de ${industry} y nuestro equipo tiene un tamaño de ${employees}. Nos gustaría saber cómo onno podría ayudarnos.`,
+        `¡Hola! Somos una empresa de ${industry} con un equipo de ${employees}. Queremos saber si onno encaja con nuestros procesos.`,
+      ],
+      '111': [
+        `¡Hola! Me llamo ${name}. Trabajamos en el sector de ${industry} y nuestro equipo tiene un tamaño de ${employees}. Me gustaría hablar sobre cómo onno podría ayudarnos.`,
+        `¡Hola! Soy ${name}. Somos una empresa de ${industry} con un equipo de ${employees} y queremos saber si onno encaja con nuestros procesos.`,
+      ],
+    }
+    return pickMessage(variants[combination])
   }
 
-  return `Hi Mike! I run a business in ${industry}, and I’d like to see whether onno could be a good fit for our operation.\n\nThe workflow we want to improve:\n${challenge}\n\nWhat could you offer us?${signature}`
+  const variants: Record<string, readonly [string, string]> = {
+    '000': [
+      'Hi! I’d like to learn more about onno and see whether it could fit our business. Where would you recommend starting?',
+      'Hi! We’re interested in onno and want to know which business processes it could help us improve.',
+    ],
+    '100': [
+      `Hi! My name is ${name}. I’d like to learn more about onno and see whether it could fit our business.`,
+      `Hi! I’m ${name}. Where should we start with onno?`,
+    ],
+    '010': [
+      `Hi! We work in ${industry} and want to know which processes we could run with onno.`,
+      `Hi! Our business is in ${industry}. We want to know whether onno could be a good fit for us.`,
+    ],
+    '001': [
+      `Hi! Our team size is ${employees}. We’d like to know whether onno suits a company of our scale.`,
+      `Hi! We’re a team of ${employees} and want to know how onno could help us.`,
+    ],
+    '110': [
+      `Hi! My name is ${name}, and we work in ${industry}. I’d like to discuss whether onno fits our processes.`,
+      `Hi! I’m ${name}. Our business is in ${industry}, and we want to know how onno could help us.`,
+    ],
+    '101': [
+      `Hi! My name is ${name}. Our team size is ${employees}, and I’d like to see whether onno could fit us.`,
+      `Hi! I’m ${name}, and we’re a team of ${employees}. Where should we start with onno?`,
+    ],
+    '011': [
+      `Hi! We work in ${industry}, and our team size is ${employees}. We’d like to discuss how onno could help our processes.`,
+      `Hi! We’re a ${industry} business with a team of ${employees}. We want to know whether onno could fit us.`,
+    ],
+    '111': [
+      `Hi! My name is ${name}. We work in ${industry}, and our team size is ${employees}. I’d like to discuss how onno could help our business.`,
+      `Hi! I’m ${name}. We’re a ${industry} business with a team of ${employees}, and we want to see whether onno fits our processes.`,
+    ],
+  }
+  return pickMessage(variants[combination])
 }
 
 export function TelegramLeadSheet() {
   const { language } = useLanguage()
   const copy = formCopy[language]
   const [open, setOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null)
+  const leadSourceRef = useRef<TelegramLeadSource>('unknown')
 
   useEffect(() => {
-    const showSheet = () => setOpen(true)
+    const showSheet = (event: Event) => {
+      const source = event instanceof CustomEvent && typeof event.detail?.source === 'string'
+        ? event.detail.source as TelegramLeadSource
+        : 'unknown'
+      leadSourceRef.current = source
+      reachMetrikaGoal('ym-open-leadform', {
+        source,
+        language,
+        path: window.location.pathname,
+      })
+      setOpen(true)
+    }
     window.addEventListener(TELEGRAM_LEAD_EVENT, showSheet)
     return () => window.removeEventListener(TELEGRAM_LEAD_EVENT, showSheet)
+  }, [language])
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 768px)')
+    const updateViewport = () => setIsDesktop(media.matches)
+    updateViewport()
+    media.addEventListener('change', updateViewport)
+    return () => media.removeEventListener('change', updateViewport)
   }, [])
+
+  function closeDialog() {
+    setOpen(false)
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const industry = String(data.get('industry') ?? '').trim()
-    const challenge = String(data.get('challenge') ?? '').trim()
+    const employees = String(data.get('employees') ?? '').trim()
     const name = String(data.get('name') ?? '').trim()
 
-    if (!industry || !challenge) return
-
-    window.open(getTelegramDraftLink(composeMessage(language, industry, challenge, name)), '_blank', 'noopener,noreferrer')
+    reachMetrikaGoal('ym-submit-leadform', {
+      source: leadSourceRef.current,
+      language,
+      industry,
+      employees,
+    })
+    window.open(getTelegramDraftLink(composeMessage(language, industry, employees, name)), '_blank', 'noopener,noreferrer')
   }
 
-  const inputClassName = 'mt-2 w-full rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5 text-base text-white outline-none transition placeholder:text-white/25 focus:border-[#64d8ce]/70 focus:bg-white/[0.09] focus:ring-2 focus:ring-[#64d8ce]/15'
+  const inputClassName = 'mt-2 w-full rounded-2xl border border-white/10 bg-white/[0.07] px-4 py-3.5 text-base text-white outline-none transition placeholder:text-white/30 focus:border-[#64d8ce]/60 focus:ring-2 focus:ring-[#64d8ce]/10 md:border-gray-900/15 md:bg-white md:text-gray-900 md:placeholder:text-gray-400 md:focus:border-[#238e85]/70 md:focus:ring-[#238e85]/10'
+
+  const formBody = (
+    <div className="relative grid min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#171719] text-white md:grid-cols-[0.9fr_1.1fr] md:overflow-hidden md:bg-white md:text-gray-900">
+      <button type="button" onClick={closeDialog} className="absolute right-6 top-6 z-10 hidden h-10 w-10 items-center justify-center rounded-full text-gray-500 outline-none transition-colors hover:bg-gray-900/[0.06] hover:text-gray-900 focus-visible:ring-2 focus-visible:ring-[#238e85]/30 md:flex" aria-label={copy.close}>
+        <X className="h-5 w-5" />
+      </button>
+
+      <section className="hidden flex-col justify-center bg-[#171719] p-12 text-white md:flex">
+        <h2 className="max-w-md text-4xl font-normal leading-[1.05] tracking-tight">{copy.pitchTitle}</h2>
+      </section>
+
+      <section className="min-h-0 bg-[#171719] px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 md:overflow-y-auto md:bg-[#f6f5f1] md:p-10">
+        <h2 id="telegram-lead-title" className="max-w-md text-2xl font-medium leading-tight tracking-tight md:pr-10 md:text-3xl">{copy.formTitle}</h2>
+        <p id="telegram-lead-description" className="mt-2 text-sm text-white/45 md:text-gray-500">{copy.allOptional}</p>
+
+        <form onSubmit={handleSubmit} className="mt-6">
+          <div className="grid gap-4">
+            <label className="block text-sm font-medium text-white/80 md:text-gray-800">
+              {copy.name}
+              <input name="name" maxLength={80} autoComplete="name" placeholder={copy.namePlaceholder} className={inputClassName} />
+            </label>
+
+            <label className="block text-sm font-medium text-white/80 md:text-gray-800">
+              {copy.industry}
+              <input name="industry" maxLength={120} autoComplete="organization-title" placeholder={copy.industryPlaceholder} className={inputClassName} />
+            </label>
+
+            <label className="block text-sm font-medium text-white/80 md:text-gray-800">
+              {copy.employees}
+              <input name="employees" maxLength={40} inputMode="numeric" placeholder={copy.employeesPlaceholder} className={inputClassName} />
+            </label>
+          </div>
+
+          <button type="submit" className="telegram-cta mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3.5 text-sm font-medium text-gray-950 transition-colors hover:bg-white/90 md:bg-gray-950 md:text-white md:hover:bg-gray-800">
+            {copy.submit} <AnimatedTelegramIcon />
+          </button>
+        </form>
+      </section>
+    </div>
+  )
+
+  if (!(isDesktop ?? true)) {
+    return (
+      <Drawer.Root open={open} onOpenChange={setOpen} shouldScaleBackground={false} handleOnly>
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-[2px]" />
+          <Drawer.Content
+            aria-labelledby="telegram-lead-title"
+            aria-describedby="telegram-lead-description"
+            className="fixed inset-x-0 bottom-0 z-[80] mx-auto flex max-h-[92dvh] flex-col overflow-hidden rounded-t-[2rem] bg-[#171719] text-white shadow-[0_-24px_80px_rgba(0,0,0,0.28)] outline-none"
+          >
+            <Drawer.Handle className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-white/20" />
+            {formBody}
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    )
+  }
 
   return (
-    <Drawer.Root open={open} onOpenChange={setOpen} shouldScaleBackground={false} handleOnly>
-      <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-[2px]" />
-        <Drawer.Content className="telegram-lead-dialog fixed inset-x-0 bottom-0 z-[80] mx-auto flex max-h-[92dvh] max-w-2xl flex-col rounded-t-[2rem] bg-[#171719] text-white shadow-[0_-24px_80px_rgba(0,0,0,0.28)] outline-none sm:shadow-[0_24px_100px_rgba(0,0,0,0.35)]">
-          <Drawer.Handle className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-white/20 sm:hidden" />
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-4 sm:px-8 sm:pb-8">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex min-w-0 items-center gap-4">
-                <span className="relative shrink-0">
-                  <img
-                    src="/images/mike-de-geofroy.jpg"
-                    alt={copy.avatarAlt}
-                    className="h-20 w-20 rounded-full object-cover shadow-lg shadow-black/20 ring-1 ring-white/15 sm:h-24 sm:w-24"
-                  />
-                  <span className="absolute bottom-0.5 right-0.5 h-4 w-4 rounded-full bg-emerald-400 ring-[3px] ring-[#171719] sm:h-5 sm:w-5" aria-hidden="true" />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#64d8ce]">{copy.eyebrow}</p>
-                  <Drawer.Title className="mt-3 text-2xl font-medium tracking-tight sm:text-3xl">{copy.title}</Drawer.Title>
-                </div>
-              </div>
-              <Drawer.Close className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.07] text-white/65 transition-colors hover:bg-white/[0.12] hover:text-white" aria-label={copy.close}>
-                <X className="h-5 w-5" />
-              </Drawer.Close>
-            </div>
-            <Drawer.Description className="sr-only">{copy.note}</Drawer.Description>
-
-            <form onSubmit={handleSubmit} className="mt-7">
-              <div className="space-y-5">
-                <label className="block text-sm font-medium text-white/80">
-                  {copy.industry}
-                  <input name="industry" required maxLength={120} autoComplete="organization-title" placeholder={copy.industryPlaceholder} className={inputClassName} />
-                </label>
-
-                <label className="block text-sm font-medium text-white/80">
-                  {copy.challenge}
-                  <textarea name="challenge" required maxLength={700} rows={4} placeholder={copy.challengePlaceholder} className={`${inputClassName} resize-y`} />
-                </label>
-
-                <label className="block text-sm font-medium text-white/80">
-                  {copy.name} <span className="font-normal text-white/35">({copy.optional})</span>
-                  <input name="name" maxLength={80} autoComplete="name" placeholder={copy.namePlaceholder} className={inputClassName} />
-                </label>
-              </div>
-
-              <button type="submit" className="telegram-cta mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3.5 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
-                {copy.submit} <AnimatedTelegramIcon />
-              </button>
-              <p className="mt-3 text-center text-xs leading-relaxed text-white/40">{copy.note}</p>
-              <a href={getTelegramLink(language)} target="_blank" rel="noreferrer" className="mt-4 block text-center text-xs text-white/55 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white">
-                {copy.direct}
-              </a>
-            </form>
-          </div>
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="telegram-lead-overlay fixed inset-0 z-[70] bg-black/55 backdrop-blur-[3px]" />
+        <Dialog.Content
+          aria-labelledby="telegram-lead-title"
+          aria-describedby="telegram-lead-description"
+          className="telegram-lead-content fixed left-1/2 top-1/2 z-[80] flex max-h-[min(46rem,calc(100dvh-4rem))] w-[min(68rem,calc(100vw-4rem))] flex-col overflow-hidden rounded-[2rem] bg-white text-gray-900 shadow-[0_40px_120px_-32px_rgba(0,0,0,0.5)] outline-none"
+        >
+          {formBody}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }

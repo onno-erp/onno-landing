@@ -10,6 +10,7 @@
     "start": "next dev -p 5173"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.21",
     "lucide-react": "^0.468.0",
     "next": "16.2.11",
     "react": "^18.3.1",

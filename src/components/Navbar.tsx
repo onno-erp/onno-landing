@@ -112,7 +112,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <button type="button" onClick={openTelegramLeadSheet} className="telegram-cta hidden items-center justify-center gap-2 overflow-hidden rounded-full bg-gray-900 px-4 py-2 text-[13px] font-medium text-white transition-colors hover:bg-gray-800 sm:inline-flex sm:px-5">
+          <button type="button" onClick={() => openTelegramLeadSheet('navbar')} className="telegram-cta hidden items-center justify-center gap-2 overflow-hidden rounded-full bg-gray-900 px-4 py-2 text-[13px] font-medium text-white transition-colors hover:bg-gray-800 sm:inline-flex sm:px-5">
             {copy.nav.cta} <AnimatedTelegramIcon />
           </button>
           <button
@@ -207,7 +207,7 @@ export function Navbar() {
             </section>
 
             <div className="mobile-menu-item mobile-menu-item-4 relative z-10 mx-2 mt-auto pt-8">
-              <button type="button" onClick={() => { setIsOpen(false); openTelegramLeadSheet() }} className="telegram-cta flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-gray-900 px-5 py-4 text-center text-sm font-medium text-white shadow-lg shadow-gray-900/15">
+              <button type="button" onClick={() => { setIsOpen(false); openTelegramLeadSheet('mobile-menu') }} className="telegram-cta flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-gray-900 px-5 py-4 text-center text-sm font-medium text-white shadow-lg shadow-gray-900/15">
                 {copy.nav.cta} <AnimatedTelegramIcon />
               </button>
             </div>

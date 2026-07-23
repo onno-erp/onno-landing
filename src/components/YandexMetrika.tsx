@@ -1,8 +1,47 @@
-import Script from 'next/script'
+'use client'
 
-const COUNTER_ID = 110955686
+import Script from 'next/script'
+import { usePathname } from 'next/navigation'
+import { useEffect, useRef } from 'react'
+import { reachMetrikaGoal, sendMetrikaPageView, YANDEX_METRIKA_COUNTER_ID } from '../metrika'
+
+const COUNTER_ID = YANDEX_METRIKA_COUNTER_ID
 
 export function YandexMetrika() {
+  const pathname = usePathname()
+  const previousUrlRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    const currentUrl = window.location.href
+    const previousUrl = previousUrlRef.current
+    previousUrlRef.current = currentUrl
+
+    if (previousUrl) sendMetrikaPageView(currentUrl, previousUrl)
+  }, [pathname])
+
+  useEffect(() => {
+    const seenSections = new Set<string>()
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('section[id]'))
+    if (!sections.length) return
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const section = (entry.target as HTMLElement).id
+        if (!entry.isIntersecting || !section || seenSections.has(section)) return
+
+        seenSections.add(section)
+        reachMetrikaGoal('landing-section-view', {
+          section,
+          path: window.location.pathname,
+        })
+        observer.unobserve(entry.target)
+      })
+    }, { threshold: 0.15 })
+
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [pathname])
+
   return (
     <>
       <Script id="yandex-metrika" strategy="afterInteractive">

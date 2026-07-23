@@ -42,7 +42,7 @@ export function Hero() {
           </p>
 
           <div className="animate-fade-up mt-6 flex flex-wrap items-center justify-start gap-3 [animation-delay:340ms]">
-            <button type="button" onClick={openTelegramLeadSheet} className="telegram-cta inline-flex items-center gap-2 overflow-hidden rounded-full bg-gray-900 px-6 py-3 text-sm font-medium text-white transition-[background-color,box-shadow] hover:bg-gray-800 hover:shadow-lg">
+            <button type="button" onClick={() => openTelegramLeadSheet('hero')} className="telegram-cta inline-flex items-center gap-2 overflow-hidden rounded-full bg-gray-900 px-6 py-3 text-sm font-medium text-white transition-[background-color,box-shadow] hover:bg-gray-800 hover:shadow-lg">
               {copy.hero.primary} <AnimatedTelegramIcon />
             </button>
             <a href="https://github.com/onno-erp/onno-framework" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition-colors hover:bg-white/50">

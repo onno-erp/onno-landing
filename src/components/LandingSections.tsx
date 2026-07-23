@@ -162,7 +162,7 @@ export function LandingSections({ ctaOnly = false }: { ctaOnly?: boolean }) {
               </h2>
               <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">{copy.finalCta.description}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <button type="button" onClick={openTelegramLeadSheet} className="telegram-cta inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
+              <button type="button" onClick={() => openTelegramLeadSheet('final-cta')} className="telegram-cta inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
                 {copy.finalCta.primary} <AnimatedTelegramIcon />
               </button>
               <a href="https://github.com/onno-erp/onno-framework" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-white ring-1 ring-white/20 transition-colors hover:bg-white/10">

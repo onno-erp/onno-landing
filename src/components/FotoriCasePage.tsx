@@ -184,7 +184,7 @@ export function FotoriCasePage() {
           <div className="mx-auto max-w-7xl rounded-[2rem] bg-[#171719] px-6 py-16 text-white sm:px-12 sm:py-20 lg:px-20">
             <h2 className="max-w-4xl text-4xl font-normal leading-tight tracking-tight sm:text-5xl lg:text-6xl">{copy.ctaTitle}</h2>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/55">{copy.ctaBody}</p>
-            <button type="button" onClick={openTelegramLeadSheet} className="telegram-cta mt-8 inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
+            <button type="button" onClick={() => openTelegramLeadSheet('case-study')} className="telegram-cta mt-8 inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white/90">
               {copy.cta} <AnimatedTelegramIcon />
             </button>
           </div>
