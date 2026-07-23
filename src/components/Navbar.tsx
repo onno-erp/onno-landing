@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react'
+'use client'
+
+import { usePathname } from 'next/navigation'
+import { useEffect, useState, type MouseEvent } from 'react'
 import { ArrowRight, ArrowUpRight, Blocks, Github, Images, Menu, Workflow, X } from 'lucide-react'
 import { useLanguage } from '../i18n'
 import { getTelegramLink } from '../telegram'
@@ -7,16 +10,26 @@ import { AnimatedTelegramIcon } from './TelegramIcon'
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(() => window.scrollY > 24)
+  const [isScrolled, setIsScrolled] = useState(false)
   const { language, copy } = useLanguage()
+  const pathname = usePathname()
   const home = `/${language}/`
   const telegramLink = getTelegramLink(language)
   const navItems = [
     { label: copy.nav.framework, description: copy.nav.frameworkDescription, href: `${home}#framework`, icon: Blocks },
     { label: copy.nav.how, description: copy.nav.howDescription, href: `${home}#how-it-works`, icon: Workflow },
-    { label: copy.nav.caseStudy, description: copy.nav.caseStudyDescription, href: `${home}case-studies/photori`, icon: Images },
+    { label: copy.nav.caseStudy, description: copy.nav.caseStudyDescription, href: `${home}#cases`, icon: Images },
     { label: copy.nav.github, description: copy.nav.githubDescription, href: 'https://github.com/onno-erp/onno-framework', icon: Github, external: true },
   ]
+
+  const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    setIsOpen(false)
+    if (pathname !== '/' && pathname.replace(/\/$/, '') !== `/${language}`) return
+
+    event.preventDefault()
+    window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}`)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   useEffect(() => {
     const updateNavbar = () => setIsScrolled(window.scrollY > 24)
@@ -50,7 +63,7 @@ export function Navbar() {
             : 'bg-transparent'
         }`}
       >
-        <a href={home} className={`group ml-2 text-gray-900 sm:ml-0 ${isScrolled ? 'logo-expanded' : ''}`} aria-label="onno home">
+        <a href={home} onClick={handleLogoClick} className={`group ml-2 text-gray-900 sm:ml-0 ${isScrolled ? 'logo-expanded' : ''}`} aria-label="onno home">
           <AnimatedOnnoLogo />
         </a>
 
@@ -94,7 +107,7 @@ export function Navbar() {
       >
           <div className="mobile-menu-panel relative flex h-full min-h-0 flex-col overflow-y-auto rounded-2xl bg-white/90 px-2 pb-2 pt-2 shadow-lg shadow-gray-900/10 ring-1 ring-gray-900/5 backdrop-blur-xl">
             <div className="mobile-menu-item mobile-menu-item-1 relative z-10 flex items-center justify-between border-b border-gray-900/10 pb-4">
-              <a href={home} className={`group ml-2 text-gray-900 ${isScrolled ? 'logo-expanded' : ''}`} aria-label="onno home" onClick={() => setIsOpen(false)}>
+              <a href={home} className={`group ml-2 text-gray-900 ${isScrolled ? 'logo-expanded' : ''}`} aria-label="onno home" onClick={handleLogoClick}>
                 <AnimatedOnnoLogo />
               </a>
               <button

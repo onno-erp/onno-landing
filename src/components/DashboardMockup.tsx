@@ -1,3 +1,5 @@
+'use client'
+
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { flushSync } from 'react-dom'
 import { Maximize2, X } from 'lucide-react'
@@ -35,7 +37,7 @@ export function DashboardMockup() {
   const [isOpen, setIsOpen] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
-  const [viewport, setViewport] = useState(() => ({ width: window.innerWidth, height: window.innerHeight }))
+  const [viewport, setViewport] = useState({ width: 0, height: 0 })
   const [previewSize, setPreviewSize] = useState({ width: 0, height: 0 })
 
   useLayoutEffect(() => {

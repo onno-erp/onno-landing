@@ -2,6 +2,8 @@
 
 Landing page for [onno](https://onno.su).
 
+Project-wide visual and interaction conventions are documented in [STYLEGUIDE.md](./STYLEGUIDE.md).
+
 ## Development
 
 ```sh

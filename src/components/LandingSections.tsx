@@ -1,3 +1,6 @@
+'use client'
+
+import type { ReactNode } from 'react'
 import {
   ArrowRight,
   Bot,
@@ -19,12 +22,29 @@ import { AnimatedTelegramIcon } from './TelegramIcon'
 
 const foundationIcons = [Boxes, Layers3, Database, FileCheck2, Bot, RefreshCw]
 
-export function LandingSections() {
+export function LandingSections({ intro }: { intro?: ReactNode }) {
   const { copy, language } = useLanguage()
   const telegramLink = getTelegramLink(language)
 
   return (
     <div className="bg-[#f3f2ee] text-gray-900">
+      {intro ?? <section className="px-5 pb-8 pt-24 sm:px-8 sm:pb-12 sm:pt-32 lg:px-10">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#171719] px-6 py-16 text-white sm:px-10 sm:py-20 lg:px-16 lg:py-24">
+          <h2 className="max-w-5xl text-5xl font-normal leading-[0.98] tracking-tight sm:text-6xl lg:text-8xl">{copy.manifesto.title}</h2>
+          <p className="mt-8 max-w-3xl text-base leading-relaxed text-white/55 sm:text-lg">{copy.manifesto.description}</p>
+
+          <div className="mt-14 grid border-t border-white/10 lg:grid-cols-3">
+            {copy.manifesto.beliefs.map((belief, index) => (
+              <article key={belief.title} className="border-b border-white/10 py-7 lg:border-b-0 lg:border-r lg:px-7 lg:py-9 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0">
+                <span className="text-xs tracking-[0.18em] text-white/25">0{index + 1}</span>
+                <h3 className="mt-8 text-xl font-medium tracking-tight">{belief.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/50">{belief.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>}
+
       <section id="framework" className="px-5 pb-24 pt-28 sm:px-8 sm:pb-32 sm:pt-36 lg:px-10">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
@@ -72,46 +92,56 @@ export function LandingSections() {
         </div>
       </section>
 
-      <section id="case-study" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-10">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-20">
-          <div>
+      <section id="cases" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-4xl">
             <h2 className="text-4xl font-normal leading-tight tracking-tight sm:text-5xl lg:text-6xl">{copy.caseStudy.title}</h2>
-            <p className="mt-5 text-base leading-relaxed text-gray-600 sm:text-lg">{copy.caseStudy.description}</p>
-
-            <div className="mt-9 rounded-2xl bg-white/65 p-6 ring-1 ring-gray-900/10">
-              <h3 className="text-sm font-medium">{copy.caseStudy.problemTitle}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">{copy.caseStudy.problem}</p>
-            </div>
-            <p className="mt-5 text-xs leading-relaxed text-gray-500">{copy.caseStudy.note}</p>
-            <a
-              href={`/${language}/case-studies/photori`}
-              className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-gray-900 transition-colors hover:text-[#238e85]"
-            >
-              {copy.caseStudy.cta} <ArrowRight className="h-4 w-4" />
-            </a>
+            <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg">{copy.caseStudy.description}</p>
           </div>
 
-          <div className="relative rounded-[2rem] bg-[#dcece9] p-6 ring-1 ring-gray-900/10 sm:p-9">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-medium tracking-tight">Photori</div>
-                <div className="mt-1 text-xs text-gray-600">{copy.caseStudy.workflowTitle}</div>
-              </div>
-              <div className="flex gap-2">
-                <span className="rounded-full bg-white/65 px-3 py-1.5 text-[10px] text-gray-600">Ozon</span>
-                <span className="rounded-full bg-white/65 px-3 py-1.5 text-[10px] text-gray-600">Wildberries</span>
-              </div>
-            </div>
+          <div className="mt-14 grid gap-6">
+            {[
+              {
+                slug: 'fotori',
+                title: copy.caseStudy.cardTitle,
+                description: copy.caseStudy.cardDescription,
+              },
+            ].map((caseItem) => (
+              <a
+                key={caseItem.slug}
+                href={`/${language}/case-studies/${caseItem.slug}`}
+                className="group relative grid min-h-[34rem] overflow-hidden rounded-[2rem] bg-[#dcece9] ring-1 ring-gray-900/10 transition-transform duration-300 hover:-translate-y-1 lg:grid-cols-[0.9fr_1.1fr]"
+              >
+                <article className="flex flex-col p-7 sm:p-10 lg:p-14">
+                  <h3 className="max-w-2xl text-4xl font-normal leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">{caseItem.title}</h3>
+                  <p className="mt-6 max-w-xl text-base leading-relaxed text-gray-600">{caseItem.description}</p>
+                  <span className="mt-auto inline-flex items-center gap-2 pt-12 text-sm font-medium text-gray-900">
+                    {copy.caseStudy.cta}
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-900 text-white transition-transform duration-300 group-hover:translate-x-1">
+                      <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </span>
+                </article>
 
-            <div className="mt-10 space-y-3">
-              {copy.caseStudy.workflow.map((item, index) => (
-                <div key={item} className="flex items-center gap-4 rounded-2xl bg-white/70 p-4 ring-1 ring-white">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-900 text-xs text-white">{index + 1}</div>
-                  <span className="text-sm font-medium">{item}</span>
-                  {index < copy.caseStudy.workflow.length - 1 ? <ArrowRight className="ml-auto h-4 w-4 text-gray-400" /> : <PackageCheck className="ml-auto h-4 w-4 text-[#238e85]" />}
+                <div className="relative flex items-center bg-[#cce3df] p-6 sm:p-10 lg:p-14">
+                  <div className="w-full space-y-3">
+                    <div className="mb-8">
+                      <div>
+                        <div className="text-2xl font-medium tracking-tight">Fotori</div>
+                        <div className="mt-1 text-xs text-gray-600">{copy.caseStudy.workflowTitle}</div>
+                      </div>
+                    </div>
+                    {copy.caseStudy.workflow.map((item, index) => (
+                      <div key={item} className="flex items-center gap-4 rounded-2xl bg-white/70 p-4 ring-1 ring-white transition-transform duration-300 group-hover:translate-x-1">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-900 text-xs text-white">{index + 1}</div>
+                        <span className="text-sm font-medium">{item}</span>
+                        {index < copy.caseStudy.workflow.length - 1 ? <ArrowRight className="ml-auto h-4 w-4 text-gray-400" /> : <PackageCheck className="ml-auto h-4 w-4 text-[#238e85]" />}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
+              </a>
+            ))}
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
+'use client'
+
 import { ArrowLeft, ArrowUpRight, Check } from 'lucide-react'
-import { useEffect } from 'react'
 import { useLanguage } from '../i18n'
 import { Footer } from './Footer'
 import { Navbar } from './Navbar'
@@ -157,11 +158,6 @@ export function InfoPage({ slug }: { slug: PageSlug }) {
   const { language } = useLanguage()
   const copy = pageCopy[language]
   const isPrivacy = slug === 'privacy'
-
-  useEffect(() => {
-    const title = isPrivacy ? copy.privacy.title : copy.pages[slug].title
-    document.title = `${title} — onno`
-  }, [copy, isPrivacy, slug])
 
   return (
     <div className="min-h-screen bg-[#f3f2ee] text-gray-900">

@@ -1,5 +1,6 @@
+'use client'
+
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
-import { useEffect } from 'react'
 import { useLanguage } from '../i18n'
 import { getTelegramLink } from '../telegram'
 import { Footer } from './Footer'
@@ -10,7 +11,7 @@ const caseCopy = {
   en: {
     back: 'Back to onno',
     status: 'Testing & pre-deployment',
-    title: 'Photori is moving marketplace production out of spreadsheets.',
+    title: 'Fotori is moving marketplace production out of spreadsheets.',
     intro: 'A picture-printing business is bringing orders, image preparation, printing, packaging and shipment into one modeled operation built with onno.',
     facts: [
       ['Business', 'Picture printing'],
@@ -42,7 +43,7 @@ const caseCopy = {
   es: {
     back: 'Volver a onno',
     status: 'Pruebas antes del despliegue',
-    title: 'Photori está trasladando la producción de marketplaces fuera de las hojas de cálculo.',
+    title: 'Fotori está trasladando la producción de marketplaces fuera de las hojas de cálculo.',
     intro: 'Un negocio de impresión fotográfica reúne pedidos, preparación de imágenes, impresión, embalaje y envío en una única operación modelada con onno.',
     facts: [
       ['Negocio', 'Impresión fotográfica'],
@@ -74,7 +75,7 @@ const caseCopy = {
   ru: {
     back: 'Вернуться к onno',
     status: 'Тестирование перед запуском',
-    title: 'Photori переносит производство заказов с маркетплейсов из таблиц.',
+    title: 'Fotori переносит производство заказов с маркетплейсов из таблиц.',
     intro: 'Фотопечатный бизнес объединяет заказы, подготовку изображений, печать, упаковку и отправку в один смоделированный процесс на onno.',
     facts: [
       ['Бизнес', 'Фотопечать'],
@@ -105,14 +106,10 @@ const caseCopy = {
   },
 } as const
 
-export function PhotoriCasePage() {
+export function FotoriCasePage() {
   const { language } = useLanguage()
   const copy = caseCopy[language]
   const telegramLink = getTelegramLink(language)
-
-  useEffect(() => {
-    document.title = `Photori — onno case study`
-  }, [])
 
   return (
     <div className="min-h-screen bg-[#f3f2ee] text-gray-900">

@@ -1,3 +1,5 @@
+'use client'
+
 import { Github } from 'lucide-react'
 import { useLanguage } from '../i18n'
 import { getTelegramLink } from '../telegram'
@@ -6,7 +8,7 @@ import { ModelShowcase } from './ModelShowcase'
 import { Navbar } from './Navbar'
 import { AnimatedTelegramIcon } from './TelegramIcon'
 
-const HERO_IMAGE = 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260611_133301_d5f2a94a-b22e-4e4a-a6b6-eacdddf1f5b0.png&w=1280&q=85'
+const HERO_IMAGE = '/images/field-hero.webp'
 const GRASS_IMAGE = 'https://res.cloudinary.com/dy5er7kv5/image/upload/q_auto/f_auto/v1781191264/grass_eam204.png'
 export function Hero() {
   const { copy, language } = useLanguage()
@@ -25,7 +27,15 @@ export function Hero() {
       <main className="relative z-20 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)] lg:gap-12 lg:px-10">
         <div className="relative z-10 flex flex-col items-start text-left">
           <h1 className="text-[40px] font-normal leading-[1.02] tracking-tight text-gray-900 min-[400px]:text-[44px] sm:text-6xl lg:text-[64px] xl:text-[76px]">
-            <span className="animate-fade-up block [animation-delay:60ms]">{copy.hero.line1}</span>
+            <span className="animate-fade-up block [animation-delay:60ms]">
+              {language === 'ru' ? (
+                <span className="inline-flex flex-wrap items-baseline gap-x-[0.18em]">
+                  <span>К черту</span>
+                  <img src="/1c-logo-clean.svg" alt="1С" className="inline-block h-[0.84em] w-auto translate-y-[0.07em]" />
+                  <span>,</span>
+                </span>
+              ) : copy.hero.line1}
+            </span>
             <span className="animate-fade-up block [animation-delay:140ms]">{copy.hero.line2}</span>
           </h1>
 

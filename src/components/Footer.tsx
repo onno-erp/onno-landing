@@ -1,4 +1,8 @@
+'use client'
+
 import { ArrowUpRight, Github } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import type { MouseEvent } from 'react'
 import { useLanguage, type Language } from '../i18n'
 import { OnnoWordmark } from './Logo'
 
@@ -12,7 +16,7 @@ const footerCopy = {
     language: 'Language',
     framework: 'Framework',
     how: 'How it works',
-    caseStudy: 'Photori case study',
+    caseStudy: 'Cases',
     documentation: 'Documentation',
     privacy: 'Privacy policy',
     rights: 'Built openly for businesses that do not fit a template.',
@@ -26,7 +30,7 @@ const footerCopy = {
     language: 'Idioma',
     framework: 'Framework',
     how: 'Cómo funciona',
-    caseStudy: 'Caso Photori',
+    caseStudy: 'Casos',
     documentation: 'Documentación',
     privacy: 'Política de privacidad',
     rights: 'Construido abiertamente para empresas que no encajan en una plantilla.',
@@ -40,7 +44,7 @@ const footerCopy = {
     language: 'Язык',
     framework: 'Фреймворк',
     how: 'Как это работает',
-    caseStudy: 'Кейс Photori',
+    caseStudy: 'Кейсы',
     documentation: 'Документация',
     privacy: 'Политика конфиденциальности',
     rights: 'Открытая основа для бизнеса, который не помещается в шаблон.',
@@ -49,8 +53,17 @@ const footerCopy = {
 
 export function Footer() {
   const { language, setLanguage } = useLanguage()
+  const pathname = usePathname()
   const copy = footerCopy[language]
   const home = `/${language}/`
+
+  const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== '/' && pathname.replace(/\/$/, '') !== `/${language}`) return
+
+    event.preventDefault()
+    window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}`)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const groups = [
     {
@@ -58,7 +71,7 @@ export function Footer() {
       links: [
         { label: copy.framework, href: `${home}#framework` },
         { label: copy.how, href: `${home}#how-it-works` },
-        { label: copy.caseStudy, href: `${home}case-studies/photori` },
+        { label: copy.caseStudy, href: `${home}#cases` },
       ],
     },
     {
@@ -87,7 +100,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-14 border-b border-white/10 pb-16 lg:grid-cols-[1.2fr_2fr] lg:gap-20 lg:pb-20">
           <div>
-            <a href={home} className="inline-flex text-white" aria-label="onno home">
+            <a href={home} onClick={handleLogoClick} className="inline-flex text-white" aria-label="onno home">
               <OnnoWordmark className="h-auto w-28" />
             </a>
             <p className="mt-7 max-w-sm text-base leading-relaxed text-white/50">{copy.description}</p>

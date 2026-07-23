@@ -1,5 +1,7 @@
-/* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+'use client'
+
+import { usePathname, useRouter } from 'next/navigation'
+import { createContext, useCallback, useContext, useEffect, useMemo } from 'react'
 
 export type Language = 'en' | 'ru' | 'es'
 
@@ -7,12 +9,12 @@ const STORAGE_KEY = 'onno-language'
 
 export const translations = {
   en: {
-    metaTitle: 'onno — AI-native business systems',
-    metaDescription: 'Model real business operations in Java and ship the database, APIs, UI, workflows and AI tools together.',
+    metaTitle: 'onno — custom business software without the platform trap',
+    metaDescription: 'Your business is not generic. Model the operation in plain Java and own the database, APIs, UI, workflows and AI tools it generates.',
     nav: {
       framework: 'Framework',
       how: 'How it works',
-      caseStudy: 'Case study',
+      caseStudy: 'Cases',
       github: 'GitHub',
       cta: 'Talk on Telegram',
       openMenu: 'Open navigation menu',
@@ -21,23 +23,30 @@ export const translations = {
       resources: 'Resources',
       frameworkDescription: 'Capabilities and building blocks',
       howDescription: 'From business model to working system',
-      caseStudyDescription: 'See onno applied to a real operation',
+      caseStudyDescription: 'Real operations built with onno',
       githubDescription: 'Source code, releases and community',
       language: 'Language',
     },
     hero: {
-      eyebrow: 'AI-native business systems',
-      line1: 'Model the business.',
-      line2: 'Ship the software.',
-      description: 'Turn customers, orders, stock, payments and business rules into one working system—without proprietary configuration.',
+      line1: 'Your business is not generic.',
+      line2: 'Your software should not be either.',
+      description: 'Stop bending the operation around somebody else’s SaaS. Model it in plain Java and ship a system your team actually owns.',
       primary: 'Talk on Telegram',
       secondary: 'Explore on GitHub',
-      proof: ['Typed Java', 'Open core', 'Built for AI agents'],
+      proof: ['Plain Java', 'No platform lock-in', 'AI tools included'],
+    },
+    manifesto: {
+      title: 'Fuck generic business software.',
+      description: 'Most platforms make the same promise: configure our product until it almost resembles your company. We built onno because “almost” is where expensive workarounds, shadow spreadsheets and permanent consultants live.',
+      beliefs: [
+        { title: 'The business model belongs to you.', description: 'Readable Java in your repository—not metadata imprisoned in a vendor’s designer.' },
+        { title: 'Unique work deserves real code.', description: 'If a workflow makes the company different, it should be testable, reviewable and versioned.' },
+        { title: 'AI needs the real operation.', description: 'Agents get typed business tools and the application’s permissions—not a chatbot pasted over disconnected data.' },
+      ],
     },
     foundation: {
-      kicker: 'One model. Every surface.',
-      title: 'Describe how the business works. onno builds the foundation.',
-      description: 'Your domain model stays explicit, readable and compiler-checked while the repetitive infrastructure is generated around it.',
+      title: 'Write the truth once. Generate the boring parts.',
+      description: 'The domain model stays explicit, readable and compiler-checked. onno turns it into the infrastructure every business system needs.',
       cards: [
         { title: 'Business model', description: 'Catalogs, documents, line items, balances and rules represented directly in Java.' },
         { title: 'Operational UI', description: 'Role-aware lists, forms, dashboards and actions generated from the same model.' },
@@ -48,8 +57,7 @@ export const translations = {
       ],
     },
     how: {
-      kicker: 'From workflow to software',
-      title: 'Start with the business—not tables and CRUD screens.',
+      title: 'No six-month “discovery phase.” Start with one workflow that hurts.',
       steps: [
         { number: '01', title: 'Model the operation', description: 'Name the customers, orders, stock, payments, events and rules the company actually works with.' },
         { number: '02', title: 'Generate the system', description: 'onno creates the database layer, APIs, role-aware interface and AI-accessible tool surface.' },
@@ -57,32 +65,35 @@ export const translations = {
       ],
     },
     caseStudy: {
-      kicker: 'Implementation story',
-      title: 'Photori: from spreadsheets to one modeled operation.',
-      description: 'A picture-printing business is moving its marketplace order workflow from Excel into an onno-based operational system.',
+      title: 'Real operations. Real mess. Working software.',
+      description: 'We start where generic tools give up: the awkward, company-specific workflow held together by spreadsheets and human memory.',
+      cardTitle: 'Fotori got production out of spreadsheets.',
+      cardDescription: 'Orders, image preparation, printing, packaging and shipment became one visible operation instead of a chain of manual handoffs.',
       status: 'Testing & pre-deployment',
       problemTitle: 'Before onno',
       problem: 'Orders from Ozon and Wildberries entered spreadsheet-driven processes, leaving managers to coordinate every production step manually.',
       workflowTitle: 'One connected workflow',
       workflow: ['Import marketplace orders', 'Download and edit customer images', 'Print and package each order', 'Post and ship the finished work'],
       note: 'The implementation is substantially complete and currently being tested before deployment.',
-      cta: 'See the workflow',
+      cta: 'Read the Fotori case',
+      nextTitle: 'What is your company still running by hand?',
+      nextDescription: 'Bring us the workflow nobody wants to touch: the ugly spreadsheet, the chat approvals, the rule only one employee remembers.',
+      nextCta: 'Tell us about it',
     },
     finalCta: {
-      kicker: 'Begin with one real workflow',
-      title: 'Your business already has a system. Let’s make it software.',
-      description: 'Show us how the work moves today. We’ll turn the nouns, events, balances and rules into a model the whole system can run on.',
+      title: 'Show us the workflow your current software cannot handle.',
+      description: 'The one held together by spreadsheets, chat messages and the employee who “just knows.” That is where we start.',
       primary: 'Talk on Telegram',
       secondary: 'Explore on GitHub',
     },
   },
   es: {
-    metaTitle: 'onno — sistemas empresariales nativos para IA',
-    metaDescription: 'Modela operaciones empresariales reales en Java y entrega la base de datos, las API, la interfaz, los procesos y las herramientas de IA como un único sistema.',
+    metaTitle: 'onno — software operativo sin el circo del ERP',
+    metaDescription: 'Tu empresa no es una plantilla. Modela la operación en Java y controla la base de datos, las API, la interfaz, los procesos y las herramientas de IA.',
     nav: {
       framework: 'Framework',
       how: 'Cómo funciona',
-      caseStudy: 'Caso',
+      caseStudy: 'Casos',
       github: 'GitHub',
       cta: 'Hablar por Telegram',
       openMenu: 'Abrir menú',
@@ -91,23 +102,30 @@ export const translations = {
       resources: 'Recursos',
       frameworkDescription: 'Capacidades y componentes fundamentales',
       howDescription: 'Del modelo de negocio al sistema operativo',
-      caseStudyDescription: 'Descubre onno en una operación real',
+      caseStudyDescription: 'Operaciones reales construidas con onno',
       githubDescription: 'Código fuente, versiones y comunidad',
       language: 'Idioma',
     },
     hero: {
-      eyebrow: 'Sistemas empresariales nativos para IA',
-      line1: 'Modela el negocio.',
-      line2: 'Lanza el software.',
-      description: 'Convierte clientes, pedidos, stock, pagos y reglas de negocio en un único sistema operativo, sin configuradores propietarios.',
+      line1: 'Tu empresa no es una plantilla.',
+      line2: 'Tu software tampoco debería serlo.',
+      description: 'Deja de pagar consultoría para adaptar tu negocio al ERP. Modela la operación real en Java y construye un sistema que sea tuyo.',
       primary: 'Hablar por Telegram',
       secondary: 'Ver en GitHub',
-      proof: ['Java tipado', 'Núcleo abierto', 'Preparado para agentes de IA'],
+      proof: ['Java normal', 'Sin secuestro tecnológico', 'Herramientas de IA incluidas'],
+    },
+    manifesto: {
+      title: 'A la mierda el ERP genérico.',
+      description: 'El guion de siempre: compra módulos, contrata consultores y cambia tu forma de trabajar para encajar en el producto. Creamos onno porque tu ventaja no debería acabar convertida en una personalización frágil.',
+      beliefs: [
+        { title: 'El modelo de negocio es tuyo.', description: 'Java legible en tu repositorio, no metadatos cautivos en el diseñador de un proveedor.' },
+        { title: 'Lo que te hace diferente merece código.', description: 'Los procesos clave deben poder probarse, revisarse y versionarse.' },
+        { title: 'La IA necesita la operación real.', description: 'Los agentes reciben herramientas de negocio tipadas y permisos reales, no un chatbot pegado encima.' },
+      ],
     },
     foundation: {
-      kicker: 'Un modelo. Todas las superficies.',
-      title: 'Describe cómo funciona el negocio. onno construye la base.',
-      description: 'Tu modelo de dominio sigue siendo explícito, legible y verificado por el compilador, mientras la infraestructura repetitiva se genera a su alrededor.',
+      title: 'Escribe la verdad una vez. Genera lo aburrido.',
+      description: 'El modelo de dominio sigue siendo explícito, legible y verificado por el compilador. onno lo convierte en la infraestructura que toda operación necesita.',
       cards: [
         { title: 'Modelo de negocio', description: 'Catálogos, documentos, líneas, saldos y reglas representados directamente en Java.' },
         { title: 'Interfaz operativa', description: 'Listas, formularios, paneles y acciones por rol generados desde el mismo modelo.' },
@@ -118,8 +136,7 @@ export const translations = {
       ],
     },
     how: {
-      kicker: 'Del proceso al software',
-      title: 'Empieza por el negocio, no por tablas y pantallas CRUD.',
+      title: 'Sin seis meses de consultoría. Empieza por el proceso que más duele.',
       steps: [
         { number: '01', title: 'Modela la operación', description: 'Nombra los clientes, pedidos, existencias, pagos, eventos y reglas con los que trabaja realmente la empresa.' },
         { number: '02', title: 'Genera el sistema', description: 'onno crea la capa de datos, las API, la interfaz por roles y la superficie de herramientas para IA.' },
@@ -127,32 +144,35 @@ export const translations = {
       ],
     },
     caseStudy: {
-      kicker: 'Historia de implementación',
-      title: 'Photori: de las hojas de cálculo a una sola operación modelada.',
-      description: 'Un negocio de impresión fotográfica está trasladando su flujo de pedidos de marketplaces desde Excel a un sistema operativo basado en onno.',
+      title: 'Operaciones reales. Caos real. Software que funciona.',
+      description: 'Empezamos donde las herramientas genéricas se rinden: el proceso incómodo y específico que vive entre hojas de cálculo y memoria humana.',
+      cardTitle: 'Fotori sacó la producción de las hojas de cálculo.',
+      cardDescription: 'Pedidos, preparación de imágenes, impresión, embalaje y envío se convirtieron en una operación visible, sin relevos manuales.',
       status: 'Pruebas antes del despliegue',
       problemTitle: 'Antes de onno',
       problem: 'Los pedidos de Ozon y Wildberries entraban en procesos basados en hojas de cálculo y los responsables tenían que coordinar manualmente cada etapa de producción.',
       workflowTitle: 'Un proceso conectado',
       workflow: ['Importar pedidos de marketplaces', 'Descargar y editar imágenes de clientes', 'Imprimir y empaquetar cada pedido', 'Registrar y enviar el trabajo terminado'],
       note: 'La implementación principal está prácticamente terminada y se encuentra en pruebas antes del despliegue.',
-      cta: 'Ver el proceso',
+      cta: 'Leer el caso Fotori',
+      nextTitle: '¿Qué sigue haciendo tu empresa a mano?',
+      nextDescription: 'Tráenos el proceso que nadie quiere tocar: la hoja monstruosa, las aprobaciones por chat o la regla que solo recuerda una persona.',
+      nextCta: 'Cuéntanoslo',
     },
     finalCta: {
-      kicker: 'Empieza con un proceso real',
-      title: 'Tu empresa ya tiene un sistema. Convirtámoslo en software.',
-      description: 'Muéstranos cómo fluye hoy el trabajo. Convertiremos las entidades, eventos, saldos y reglas en un modelo sobre el que pueda funcionar todo el sistema.',
+      title: 'Enséñanos el proceso que tu ERP no sabe resolver.',
+      description: 'El que depende de hojas de cálculo, mensajes y esa persona que “sabe cómo funciona”. Empezamos por ahí.',
       primary: 'Hablar por Telegram',
       secondary: 'Ver en GitHub',
     },
   },
   ru: {
-    metaTitle: 'onno — AI-native бизнес-системы',
-    metaDescription: 'Опишите реальные бизнес-процессы на Java и получите базу данных, API, интерфейс, процессы и AI-инструменты как единую систему.',
+    metaTitle: 'onno — бизнес-системы без конфигуратора 1С',
+    metaDescription: 'Бизнес-логика на обычной Java вместо закрытого конфигуратора: база данных, API, интерфейс, процессы и AI-инструменты из одной модели.',
     nav: {
       framework: 'Фреймворк',
       how: 'Как это работает',
-      caseStudy: 'Кейс',
+      caseStudy: 'Кейсы',
       github: 'GitHub',
       cta: 'Написать в Telegram',
       openMenu: 'Открыть меню',
@@ -161,23 +181,30 @@ export const translations = {
       resources: 'Ресурсы',
       frameworkDescription: 'Возможности и основные компоненты',
       howDescription: 'От модели бизнеса к рабочей системе',
-      caseStudyDescription: 'onno в реальном бизнес-процессе',
+      caseStudyDescription: 'Реальные процессы, построенные на onno',
       githubDescription: 'Исходный код, релизы и сообщество',
       language: 'Язык',
     },
     hero: {
-      eyebrow: 'AI-native бизнес-системы',
-      line1: 'Опишите бизнес.',
-      line2: 'Запустите систему.',
-      description: 'Превратите клиентов, заказы, остатки, платежи и бизнес-правила в единую рабочую систему — без закрытых конфигураторов.',
+      line1: 'К черту 1С,',
+      line2: '21-й век на дворе.',
+      description: 'Бизнес-системы пора разрабатывать как нормальный софт: на Java, в Git, с тестами, code review и CI/CD. Ваша логика, ваш код — никакого конфигуратора.',
       primary: 'Написать в Telegram',
       secondary: 'Посмотреть на GitHub',
-      proof: ['Типизированная Java', 'Открытое ядро', 'Готово для AI-агентов'],
+      proof: ['Обычная Java', 'Никакого vendor lock-in', 'AI-инструменты из коробки'],
+    },
+    manifesto: {
+      title: 'Конфигуратор не должен владеть вашим бизнесом.',
+      description: '1С научила рынок считать нормой отдельный язык, отдельный мир разработки и доработки без конца. Мы сделали onno, потому что бизнес-логика компании должна жить в её кодовой базе, а не в чужой платформе.',
+      beliefs: [
+        { title: 'Модель бизнеса принадлежит вам.', description: 'Понятная Java в вашем репозитории, а не метаданные, запертые в проприетарном дизайнере.' },
+        { title: 'Уникальные процессы — это нормальный код.', description: 'Их можно тестировать, обсуждать на code review и менять без шаманства.' },
+        { title: 'AI должен работать с бизнесом, а не с экраном.', description: 'Агенты получают типизированные инструменты и реальные права доступа, а не чат поверх базы.' },
+      ],
     },
     foundation: {
-      kicker: 'Одна модель. Все поверхности.',
-      title: 'Опишите работу бизнеса. onno построит фундамент системы.',
-      description: 'Доменная модель остаётся явной, понятной и проверяемой компилятором, а повторяющаяся инфраструктура создаётся вокруг неё.',
+      title: 'Один раз опишите правду. Рутину сгенерирует onno.',
+      description: 'Доменная модель остаётся явной, понятной и проверяемой компилятором. onno превращает её в инфраструктуру полноценной бизнес-системы.',
       cards: [
         { title: 'Модель бизнеса', description: 'Справочники, документы, строки, остатки и правила напрямую представлены в Java.' },
         { title: 'Рабочий интерфейс', description: 'Списки, формы, панели и действия с учётом ролей создаются из той же модели.' },
@@ -188,8 +215,7 @@ export const translations = {
       ],
     },
     how: {
-      kicker: 'От процесса к программе',
-      title: 'Начните с бизнеса, а не с таблиц и CRUD-экранов.',
+      title: 'Без полугода обследований. Начните с процесса, который всех бесит.',
       steps: [
         { number: '01', title: 'Опишите работу', description: 'Назовите клиентов, заказы, остатки, платежи, события и правила, с которыми реально работает компания.' },
         { number: '02', title: 'Соберите систему', description: 'onno создаст слой данных, API, ролевой интерфейс и поверхность инструментов для AI.' },
@@ -197,21 +223,24 @@ export const translations = {
       ],
     },
     caseStudy: {
-      kicker: 'История внедрения',
-      title: 'Photori: от таблиц к единому рабочему процессу.',
-      description: 'Фотопечатный бизнес переносит обработку заказов с маркетплейсов из Excel в операционную систему на onno.',
+      title: 'Настоящие процессы. Настоящий бардак. Рабочий софт.',
+      description: 'Мы начинаем там, где типовые системы сдаются: с неудобного, уникального процесса, который держится на таблицах и памяти сотрудников.',
+      cardTitle: 'Fotori вывела производство из таблиц.',
+      cardDescription: 'Заказы, обработка изображений, печать, упаковка и отправка стали одним видимым процессом вместо цепочки ручных передач.',
       status: 'Тестирование перед запуском',
       problemTitle: 'До onno',
       problem: 'Заказы Ozon и Wildberries попадали в процессы на базе таблиц, а менеджерам приходилось вручную координировать каждый этап производства.',
       workflowTitle: 'Единый процесс',
       workflow: ['Импортировать заказы маркетплейсов', 'Скачать и обработать изображения', 'Напечатать и упаковать заказ', 'Оформить и отправить готовую работу'],
       note: 'Основная система уже готова и сейчас проходит тестирование перед внедрением.',
-      cta: 'Посмотреть процесс',
+      cta: 'Читать кейс Fotori',
+      nextTitle: 'Что ваша компания до сих пор делает руками?',
+      nextDescription: 'Принесите процесс, к которому все боятся прикасаться: страшную таблицу, согласования в чатах или правило, которое помнит один сотрудник.',
+      nextCta: 'Расскажите нам',
     },
     finalCta: {
-      kicker: 'Начните с одного реального процесса',
-      title: 'У вашего бизнеса уже есть система. Давайте превратим её в программу.',
-      description: 'Покажите, как работа движется сегодня. Мы превратим сущности, события, остатки и правила в модель, на которой сможет работать вся система.',
+      title: 'Принесите процесс, с которым не справилась ваша 1С.',
+      description: 'Тот самый — на Excel, сообщениях в чате и сотруднике, который «просто знает, что делать». С него и начнём.',
       primary: 'Написать в Telegram',
       secondary: 'Посмотреть на GitHub',
     },
@@ -226,36 +255,24 @@ type LanguageContextValue = {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null)
 
-function resolveInitialLanguage(): Language {
-  const pathLanguage = window.location.pathname.match(/^\/(en|ru|es)(?:\/|$)/)?.[1]
-  if (pathLanguage === 'en' || pathLanguage === 'ru' || pathLanguage === 'es') return pathLanguage
-
-  const savedLanguage = window.localStorage.getItem(STORAGE_KEY)
-  if (savedLanguage === 'en' || savedLanguage === 'ru' || savedLanguage === 'es') return savedLanguage
-
-  if (window.navigator.languages.some((language) => language.toLowerCase().startsWith('ru'))) return 'ru'
-  if (window.navigator.languages.some((language) => language.toLowerCase().startsWith('es'))) return 'es'
-  return 'en'
-}
-
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>(resolveInitialLanguage)
+export function LanguageProvider({ children, initialLanguage }: { children: React.ReactNode; initialLanguage: Language }) {
+  const language = initialLanguage
   const copy = translations[language]
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const setLanguage = useCallback((nextLanguage: Language) => {
+    const routePath = pathname.replace(/^\/(en|ru|es)(?=\/|$)/, '')
+    const localizedPath = `/${nextLanguage}${routePath || '/'}`
+    const suffix = typeof window === 'undefined' ? '' : `${window.location.search}${window.location.hash}`
+    router.push(`${localizedPath}${suffix}`)
+  }, [pathname, router])
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, language)
-    document.documentElement.lang = language
-    document.title = copy.metaTitle
-    document.querySelector('meta[name="description"]')?.setAttribute('content', copy.metaDescription)
+  }, [language])
 
-    const routePath = window.location.pathname.replace(/^\/(en|ru|es)(?=\/|$)/, '')
-    const localizedPath = `/${language}${routePath || '/'}`
-    if (window.location.pathname !== localizedPath) {
-      window.history.replaceState({}, '', `${localizedPath}${window.location.search}${window.location.hash}`)
-    }
-  }, [copy.metaDescription, copy.metaTitle, language])
-
-  const value = useMemo(() => ({ language, setLanguage, copy }), [copy, language])
+  const value = useMemo(() => ({ language, setLanguage, copy }), [copy, language, setLanguage])
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
 }
 

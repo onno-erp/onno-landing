@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <image href="images/field-hero.webp" x="0" y="-24" width="1200" height="679" preserveAspectRatio="xMidYMid slice" />
+
+  <svg x="80" y="64" width="205" height="62" viewBox="0 0 438 131" fill="none" color="#171719">
+    <circle cx="51" cy="65.3574" r="51" fill="currentColor" />
+    <circle cx="387" cy="65.3574" r="51" fill="currentColor" />
+    <path d="M159.041 14.5C178.003 13.0372 197.023 22.2873 207.168 39.8575C217.312 57.4275 215.812 78.5237 205.064 94.2141L159.041 14.5ZM165.847 116.288C147.257 117.312 128.779 108.084 118.833 90.8575C108.887 73.6308 110.134 53.0138 120.316 37.4262L165.847 116.288Z" fill="currentColor" />
+    <path d="M271.041 14.5C290.003 13.0372 309.023 22.2873 319.168 39.8575C329.312 57.4275 327.812 78.5237 317.064 94.2141L271.041 14.5ZM277.847 116.288C259.257 117.312 240.779 108.084 230.833 90.8575C220.887 73.6308 222.134 53.0138 232.316 37.4262L277.847 116.288Z" fill="currentColor" />
+  </svg>
+
+  <g fill="#171719" font-family="Nimbus Sans TW01, Helvetica Neue, Helvetica, Arial, sans-serif">
+    <text x="80" y="298" font-size="72" font-weight="700" letter-spacing="-1.8">К черту</text>
+    <image href="1c-logo-clean.svg" x="370" y="241" width="150" height="73" />
+    <text x="536" y="298" font-size="72" font-weight="700">,</text>
+    <text x="80" y="384" font-size="72" font-weight="700" letter-spacing="-1.8">21-й век на дворе.</text>
+  </g>
+</svg>
